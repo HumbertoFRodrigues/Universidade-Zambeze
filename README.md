@@ -6,13 +6,17 @@ Estrutura do Repositório 📂
 
 O repositório está dividido em pastas correspondentes às diferentes disciplinas do curso. Cada disciplina possui subpastas que contêm materiais essenciais:
 
-    Aulas: Aqui, você encontrará os materiais teóricos apresentados em sala de aula, proporcionando uma referência sólida para o aprendizado.
+# Aulas:
+Aqui, você encontrará os materiais teóricos apresentados em sala de aula, proporcionando uma referência sólida para o aprendizado.
 
-    Exercícios: Esta seção abriga os exercícios propostos para praticar e consolidar os conhecimentos adquiridos durante as aulas.
+# Exercícios:
+Esta seção abriga os exercícios propostos para praticar e consolidar os conhecimentos adquiridos durante as aulas.
 
-    Testes: Os testes realizados ao longo do semestre estão disponíveis nesta pasta, permitindo uma revisão abrangente para avaliações futuras.
+# Testes:
+Os testes realizados ao longo do semestre estão disponíveis nesta pasta, permitindo uma revisão abrangente para avaliações futuras.
 
-    Aulas Práticas: Incluí informações valiosas provenientes das aulas práticas ministradas pelos docentes, contribuindo para uma compreensão mais prática e aplicada dos conceitos estudados.
+# Aulas Práticas: 
+Incluí informações valiosas provenientes das aulas práticas ministradas pelos docentes, contribuindo para uma compreensão mais prática e aplicada dos conceitos estudados.
 
 Sobre Mim 📚
 
