@@ -18,7 +18,7 @@ Os testes realizados ao longo do semestre estão disponíveis nesta pasta, permi
 # Aulas Práticas: 
 Incluí informações valiosas provenientes das aulas práticas ministradas pelos docentes, contribuindo para uma compreensão mais prática e aplicada dos conceitos estudados.
 
-Sobre Mim 📚
+# Sobre Mim 📚
 
 Sou um estudante comprometido com o aprendizado contínuo e apaixonado por desafios na área de Engenharia Informática. Este repositório não apenas serve como um recurso pessoal, mas também como uma maneira de contribuir para a comunidade acadêmica.
 
