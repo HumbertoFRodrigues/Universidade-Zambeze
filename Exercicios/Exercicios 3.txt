@@ -1,0 +1,13 @@
+1. Fazer um programa que escreve seu nome na tela, andando em linha horizontal e descendo para outra.
+2. Fazer um programa que movimenta o seu nome na tela em forma de onda, indo e voltando.
+3. Fazer um programa que deteta se um texto é palindro ou não.
+4. Fazer um progrma que recebe 100 numeros e conta quantas vezes o dobro do primeiro número se repete.
+5. Fazer um progrma que calcula um fatorial de um numero.
+6. Fazer um programa que deteta se um numero é primo ou não.
+7. Fazer um programa que imprime todos numeros da serie Fibonacci maior que 100 e menor que 800.
+8. Fazer um programa que recebe 12 números e mostra o maior desses numeros.
+9. Fazer um programa que recebe 12 números e mostra o segundo maior desses numeros.
+10.Fazer um programa que recebe 12 números e mostra o terceiro maior desses numeros. 
+11. Fazer programa que imprime numeros de 1 a 1000 obedecendo se a quantidade de numeros primos
+for par, ele imprime o dobro do numero, se não ele imprime numero normal.
+12. Fazer um programa para somar um grupo de 20 numeros digitados no teclado. 
