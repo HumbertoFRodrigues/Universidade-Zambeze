@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <style>
+    .oldy{
+        display: flex;
+    }
+    
+    button{
+        margin-left: 10px;
+
+ </style>
+    <title>Calculadora Simples</title>
+    <script>
+        function calcular() {
+            var valor1 = parseFloat(document.getElementById("valor1").value);
+            var valor2 = parseFloat(document.getElementById("valor2").value);
+            var operacao = document.getElementById("operacao").value;
+            var resultado;
+            if (isNaN(valor1) || isNaN(valor2)) {
+                alert("por favor, insira os numeros validos.");
+                return;
+            }
+            if (operacao == "+") {
+                resultado = valor1 + valor2;
+            } else if (operacao == "-") {
+                resultado = valor1 - valor2;
+            } else if (operacao == "*") {
+                resultado = valor1 * valor2;
+            } else if (operacao == "/") {
+                if (valor2 != 0) {
+                    resultado = valor1 / valor2;
+                } else {
+                    alert("Divisão por zero não é permitida.");
+                    return;
+                }
+            }
+            
+            alert("Resultado: " + resultado);
+        }
+    </script>
+</head>
+<body>
+    <h2>Calculadora Simples</h2>
+    <form>
+        Valor 1: <input type="text" id="valor1"><br><br>
+        Valor 2: <input type="text" id="valor2"><br><br>
+       <div class="oldy"> 
+        
+        Operação:
+        <select id="operacao">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        
+        <br><br>
+        <button  type="button" onclick="calcular()">Calcular</button>
+        </div>
+    </form>
+</body>
+</html>

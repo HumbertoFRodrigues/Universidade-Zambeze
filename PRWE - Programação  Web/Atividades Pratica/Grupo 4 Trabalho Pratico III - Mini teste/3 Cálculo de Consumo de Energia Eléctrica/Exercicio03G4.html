@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício 03</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: orange;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin: 0;
+            color: white;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #099110;
+        }
+
+        p#resultado {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+
+    <script>
+        function calcularConta() {
+            var quantidadeKwh = parseFloat(document.getElementById("quantidadeKwh").value);
+            var valorKwh = parseFloat(document.getElementById("valorKwh").value);
+            var valorFinal;
+
+            if (quantidadeKwh > 100) {
+                valorKwh *= 1.25;
+            } else if (quantidadeKwh > 200) {
+                valorKwh *= 1.50;
+            }
+
+            valorFinal = quantidadeKwh * valorKwh;
+
+            document.getElementById("resultado").innerHTML = "Valor da Conta: " + valorFinal.toFixed(2) + " MZN";
+        }
+    </script>
+</head>
+<body>
+    <h1>Electricidade de Moçambique</h1>
+    <h3>Iluminando a Transformação de Moçambique</h3>
+
+    <div class="container">
+        <h2>Cálculo de Consumo de Energia Eléctrica</h2>
+        <form>
+            <label for="quantidadeKwh">Quantidade de Kwh consumidos:</label>
+            <input type="number" id="quantidadeKwh" name="quantidadeKwh" step="0.01" required>
+
+            <label for="valorKwh">Valor unitário do Kwh (em MZN):</label>
+            <input type="number" id="valorKwh" name="valorKwh" step="0.01" required>
+
+            <button type="button" onclick="calcularConta()">Calcular Conta</button>
+        </form>
+
+        <p id="resultado"></p>
+    </div>
+</body>
+</html>
