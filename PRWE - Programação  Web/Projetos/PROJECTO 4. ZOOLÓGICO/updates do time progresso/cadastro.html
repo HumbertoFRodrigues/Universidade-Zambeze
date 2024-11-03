@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Zoo da Oldy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            max-width: 800px;
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .form-container {
+            width: 60%;
+            padding: 10px;
+        }
+
+        .image-container {
+            width: 35%;
+            padding-right: 10px;
+            display: block;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: black;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-container img {
+            width: 100px;
+            height: auto;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 48%;
+            padding: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            color: green;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .login-link a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .login-link a:hover {
+            color: #0056b3;
+        }
+
+        /* Ajuste responsivo */
+        @media only screen and (max-width: 768px) {
+            .modal-content {
+                width: 90%;
+                flex-direction: column;
+            }
+
+            .form-container, .image-container {
+                width: 100%;
+                padding: 0;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .image-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Link para abrir o modal diretamente -->
+<a href="#myModal" id="openModalLink">Cadastre-se agora</a>
+
+<!-- Modal Pop-up -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+
+        <!-- Imagem ao redor -->
+        <div class="image-container">
+            <img src="2.png" alt="Imagem Decorativa" id="carouselImage">
+        </div>
+
+        <!-- Formulário -->
+        <div class="form-container">
+            <span class="close" id="closeModalBtn">&times;</span>
+
+            <!-- Espaço para o logo -->
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo">
+            </div>
+
+            <h2>Cadastro - Zoo da Oldy</h2>
+
+            <form id="registerForm">
+                <!-- Etapa 1: Nome, Apelido (Sobrenome), Sexo e Endereço -->
+                <div class="step active">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Insira seu nome" required>
+
+                    <label for="apelido">Apelido (Sobrenome):</label>
+                    <input type="text" id="apelido" name="apelido" placeholder="Insira seu apelido" required>
+
+                    <label>Sexo:</label>
+                    <input type="radio" id="masculino" name="sexo" value="Masculino" required> <label for="masculino">Masculino</label>
+                    <input type="radio" id="feminino" name="sexo" value="Feminino" required> <label for="feminino">Feminino</label>
+
+                    <p>
+
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco" placeholder="Insira seu endereço" style="margin-bottom: 15px;" required>
+
+                    <div class="login-link">
+                        <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" onclick="nextStep()">Avançar</button>
+                    </div>
+                </div>
+
+                <!-- Etapa 2: Nacionalidade, Telefone e Data de Nascimento -->
+                <div class="step">
+                    <label for="pais">Nacionalidade:</label>
+                    <select id="pais" name="pais" onchange="setCodigoTelefone()" required>
+                        <option value="">Selecione um país</option>
+                        <option value="+258">Moçambique (+258)</option>
+                        <option value="+55">Brasil (+55)</option>
+                        <option value="+27">África do Sul (+27)</option>
+                        <option value="+244">Angola (+244)</option>
+                    </select>
+
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" placeholder="Insira seu telefone" required>
+
+                    <label for="data_nascimento">Data de Nascimento:</label>
+                    <input type="date" id="data_nascimento" name="data_nascimento" required onchange="validarIdade()">
+
+                    <label for="ocupacao">Ocupação:</label>
+                    <input type="text" id="ocupacao" name="ocupacao" placeholder="Insira sua ocupação" required>
+
+                    <div class="button-group">
+                        <button type="button" onclick="prevStep()">Retroceder</button>
+                        <button type="button" onclick="nextStep()">Avançar</button>
+                    </div>
+                </div>
+
+                <!-- Etapa 3: Criar Email, Senha e Confirmar Senha -->
+                <div class="step">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Insira seu email" required>
+
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+
+                    <label for="confirmarSenha">Confirmar Senha:</label>
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirme sua senha" required>
+
+                    <div class="button-group">
+                        <button type="button" onclick="prevStep()">Retroceder</button>
+                        <button type="submit">Cadastrar</button>
+                    </div>
+                </div>
+
+                <!-- Mensagem de Sucesso -->
+                <div class="success-message" id="successMessage">
+                    Sua conta foi criada com sucesso!
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById("myModal");
+    const openModalLink = document.getElementById("openModalLink");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const registerForm = document.getElementById("registerForm");
+
+    openModalLink.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+        registerForm.reset();
+    }
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            registerForm.reset();
+        }
+    }
+
+    let currentStep = 0;
+    const steps = document.querySelectorAll(".step");
+
+    function nextStep() {
+        if (!validateStep()) return;
+        steps[currentStep].classList.remove("active");
+        currentStep++;
+        steps[currentStep].classList.add("active");
+    }
+
+    function prevStep() {
+        steps[currentStep].classList.remove("active");
+        currentStep--;
+        steps[currentStep].classList.add("active");
+    }
+
+    function validateStep() {
+        const inputs = steps[currentStep].querySelectorAll("input, select");
+        for (let input of inputs) {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function validarIdade() {
+        const dataNascimento = new Date(document.getElementById("data_nascimento").value);
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+        const mes = hoje.getMonth() - dataNascimento.getMonth();
+        if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
+            idade--;
+        }
+
+        if (idade < 16) {
+            alert("Você é menor de idade e não pode criar uma conta.");
+            document.getElementById("data_nascimento").value = '';
+        }
+    }
+
+    // Função para preencher automaticamente o código do país no campo de telefone
+    function setCodigoTelefone() {
+        const paisSelecionado = document.getElementById("pais").value;
+        document.getElementById("telefone").value = paisSelecionado;
+    }
+
+    // Submissão do formulário com validação de senha
+    registerForm.onsubmit = function(event) {
+        event.preventDefault();
+
+        const senha = document.getElementById("senha").value;
+        const confirmarSenha = document.getElementById("confirmarSenha").value;
+
+        if (senha !== confirmarSenha) {
+            alert("As senhas não são iguais.");
+            return false;
+        }
+
+        // Exibir mensagem de sucesso e redirecionar
+        document.getElementById("successMessage").style.display = "block";
+        setTimeout(() => {
+            modal.style.display = "none";
+            window.location.href = "painel.html"; // Redirecionar para o painel
+        }, 2000);
+    }
+
+    // Função para o carrossel de imagens
+    const imagens = [
+        "a.png",
+        "1.png",
+        "2.png",
+        "3.png",
+        "4.png",
+
+    ];
+
+    let imagemAtual = 0;
+    const carouselImage = document.getElementById("carouselImage");
+
+    setInterval(() => {
+        imagemAtual = (imagemAtual + 1) % imagens.length;
+        carouselImage.src = imagens[imagemAtual];
+    }, 7000); // Troca de imagem a cada 7 segundos
+
+</script>
+
+</body>
+</html>
