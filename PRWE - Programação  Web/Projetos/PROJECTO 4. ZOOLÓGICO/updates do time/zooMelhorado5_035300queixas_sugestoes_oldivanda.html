@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Queixas - Zoo da Oldy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #animalComments {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Seja bem vindo ao Zoo da Oldy <br>faça a sua queixa. </h2>
+<form id="complaintForm">
+    <label for="name">Nome:</label>
+    <input type="text" id="name" required>
+
+    <label for="gender">Sexo:</label>
+    <select id="gender" required>
+        <option value="">Selecione...</option>
+        <option value="masculino">Masculino</option>
+        <option value="feminino">Feminino</option>
+        <option value="outro">Outro</option>
+    </select>
+
+    <label for="complaintType">Tipo de Reclamação:</label>
+    <select id="complaintType" required>
+        <option value="">Selecione...</option>
+        <option value="animais">Problemas com animais</option>
+        <option value="instalacoes">Instalações</option>
+        <option value="atendimento">Atendimento ao cliente</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="outros">Outros</option>
+    </select>
+
+    <div id="animalComments">
+        <label>Escolha uma Opção sobre Problemas com Animais:</label>
+        <select id="animalIssues">
+            <option value="">Selecione...</option>
+            <option value="condicoes">Os animais não estão em boas condições</option>
+            <option value="magros">Os animais estão magros e mal alimentados</option>
+            <option value="limpeza">Os animais não estão num lugar limpo</option>
+            <option value="higiene">Os animais selvagens representam um perigo </option>
+        </select>
+        <textarea id="animalRemarks" rows="4" placeholder="Comentários adicionais sobre os animais..."></textarea>
+    </div>
+
+    <label>Gravar Áudio da Reclamação (opcional):</label>
+    <div>
+        <button type="button" id="startRecord">Iniciar Gravação</button>
+        <button type="button" id="stopRecord" disabled>Parar Gravação</button>
+    </div>
+    <audio id="audioPlayback" controls style="display:none;"></audio>
+    <input type="hidden" id="audioBlob">
+
+    <label for="comments">Comentários Adicionais:</label>
+    <textarea id="comments" rows="4"></textarea>
+
+    <label for="suggestions">Sugestões de Melhoria:</label>
+    <textarea id="suggestions" rows="4" placeholder="Escreva sua sugestão..."></textarea>
+
+    <button type="submit">Enviar Reclamação</button>
+</form>
+
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+
+    document.getElementById('complaintType').addEventListener('change', function() {
+        const animalComments = document.getElementById('animalComments');
+        if (this.value === 'animais') {
+            animalComments.style.display = 'block';
+        } else {
+            animalComments.style.display = 'none';
+            document.getElementById('animalIssues').value = '';
+            document.getElementById('animalRemarks').value = '';
+        }
+    });
+
+    document.getElementById('startRecord').addEventListener('click', async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.start();
+        document.getElementById('startRecord').disabled = true;
+        document.getElementById('stopRecord').disabled = false;
+
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            audioChunks = [];
+            document.getElementById('audioBlob').value = audioBlob;
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audioPlayback = document.getElementById('audioPlayback');
+            audioPlayback.src = audioUrl;
+            audioPlayback.style.display = 'block';
+        };
+    });
+
+    document.getElementById('stopRecord').addEventListener('click', () => {
+        mediaRecorder.stop();
+        document.getElementById('startRecord').disabled = false;
+        document.getElementById('stopRecord').disabled = true;
+    });
+
+    document.getElementById('complaintForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const complaintType = document.getElementById('complaintType').value;
+        const animalIssue = document.getElementById('animalIssues').value;
+        const comments = document.getElementById('comments').value;
+        const animalRemarks = document.getElementById('animalRemarks').value;
+        const suggestions = document.getElementById('suggestions').value;
+        const audioBlob = document.getElementById('audioBlob').value;
+
+        if (complaintType) {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('gender', gender);
+            formData.append('type', complaintType);
+            if (audioBlob) {
+                formData.append('audio', audioBlob);
+            }
+            formData.append('comments', comments);
+            formData.append('suggestions', suggestions);
+            if (complaintType === 'animais' && animalIssue) {
+                formData.append('animalIssue', animalIssue);
+                formData.append('animalRemarks', animalRemarks);
+            }
+
+            try {
+                const response = await fetch('https://example.com/api/complaints', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Reclamação enviada com sucesso!');
+                    this.reset(); // Reseta o formulário
+                    document.getElementById('audioPlayback').style.display = 'none'; // Esconde o áudio
+                } else {
+                    alert('Erro ao enviar a reclamação. Tente novamente mais tarde.');
+                }
+            } catch (error) {
+                alert('Erro ao enviar a reclamação: ' + error.message);
+            }
+        } else {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+        }
+    });
+</script>
+
+</body>
+</html>
