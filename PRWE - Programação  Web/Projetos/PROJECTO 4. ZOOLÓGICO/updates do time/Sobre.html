@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - Zoo da Oldy</title> 
+    <!-- Link para o Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="Favicon/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" />
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        header {
+            text-align: center;
+            padding: 1px;
+            background-color: #4CAF50;
+            color: white;
+            animation: slideInDown 0.5s;
+        }
+        @keyframes slideInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        main {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            animation: bounceIn 0.5s;
+        }
+        @keyframes bounceIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        .funcionarios {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .funcionario {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+            animation: zoomIn 0.5s; 
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .funcionario:hover {
+            transform: scale(1.05); 
+        }
+        .funcionario img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
+        }
+        .depoimentos blockquote {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-left: 5px solid #4CAF50;
+            margin: 10px 0;
+            animation: fadeInUp 0.5s;
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .doacao {
+            text-align: center;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .redes-sociais {
+            text-align: center;
+        }
+        .redes a {
+            margin: 0 10px;
+            color: #4CAF50;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .redes a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+        }
+        /* Animação de zoom nas imagens dos funcionários */
+        .funcionarios img{
+            transition: transform 0.3s ease-in-out;
+        }
+        .funcionarios img:hover{
+            transform: scale(1.1);
+        }
+        /* Animação para botões */
+        button {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        button:hover {
+            background-color: #4CAF50;
+            transform: scale(1.05);
+        }
+        .depoimentos blockquote {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .depoimentos blockquote.active {
+            display: block;
+            opacity: 1;
+        }
+        /* Tooltip para redes sociais */
+        .redes-sociais a {
+            position: relative;
+            text-decoration: none;
+            color: black;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        .redes-sociais a:hover {
+            color: #4CAF50;
+        }
+        .redes-sociais a::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: black;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .redes-sociais a:hover::after {
+            opacity: 1;
+        }
+        /* Ícones das redes sociais */
+        .redes-sociais i {
+            margin-right: 8px;
+        }
+        
+        #agradecimento {
+            display: none;
+            color: green;
+        }
+        /* Estilos para rolagem suave */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Perguntas Frequentes (FAQ) */
+        .faq {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .faq h2 {
+            font-size: 24px;
+        }
+        .faq-item {
+            border-bottom: 1px solid #ccc;
+            margin: 10px 0;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .faq-item p {
+            display: none;
+            transition: all 0.3s ease;
+        }
+        .faq-item.active p {
+            display: block;
+        }
+        #sobre{
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Zoo da Oldy</h1>
+    </header>
+
+    <main>
+        <section class="sobre-zoologico" data-aos="fade-up">
+            <div id="sobre">
+                <h2>Sobre o Zoo da Oldy</h2>
+
+                <p>O <strong>Zoo da Oldy</strong> é muito mais do que um simples zoológico. Localizado no coração de Matacuane, Beira, o nosso espaço é um verdadeiro refúgio para a preservação da vida selvagem, combinando um ambiente educativo com o compromisso de conservar espécies ameaçadas de extinção. Com uma equipa de especialistas dedicados e uma infraestrutura de classe mundial, proporcionamos aos nossos visitantes uma experiência única, onde a natureza e a educação andam de mãos dadas.</p>
+
+                <p>Aqui, encontrará uma variedade impressionante de animais exóticos e locais, todos cuidadosamente tratados num ambiente que simula os seus habitats naturais. Do majestoso leão africano às pequenas criaturas da floresta tropical, cada espécie conta uma história de resiliência e coexistência com o meio ambiente.</p>
+
+                <p>Além de explorar as nossas áreas de exibição, os visitantes podem participar em actividades interativas que promovem a aprendizagem sobre conservação e sustentabilidade. O <strong>Zoo da Oldy</strong> é também um local de investigação e protecção ambiental, colaborando com instituições locais e internacionais para a preservação da fauna e da flora.</p>
+
+                <p><strong>Junte-se a nós</strong> numa jornada inesquecível através do mundo selvagem. Seja com a sua família, amigos ou numa visita educativa, o Zoo da Oldy oferece algo especial para todos – uma oportunidade para se conectar com a natureza e ajudar a proteger o futuro do nosso planeta.</p>
+            </div>
+        </section>
+
+        <section class="funcionamento" data-aos="fade-up">
+            <h2>Funcionamento</h2>
+            <p><strong>Horário de Funcionamento:</strong> Todos os dias das 9h às 17h.</p>
+            <p><strong>Dias de Abertura:</strong> O zoológico está aberto todos os dias, excepto em feriados especiais.</p>
+        </section>
+
+        <h2 data-aos="fade-up">Nossos Funcionários</h2>
+        <section class="funcionarios" data-aos="fade-up">
+            <div class="funcionario">
+                <img src="Images Funcionarios/Oldivanda.png" alt="Funcionário 1">
+                <h3>Oldivanda Sambo</h3>
+                <p>Gerente</p>
+                <p>Responsável por liderar as operações diárias, gestão de equipe e promoção de programas de conservação e sustentabilidade.</p>
+            </div>
+            <div class="funcionario">
+                <img src="Images Funcionarios/Humberto.png" alt="Funcionário 2">
+                <h3>Humberto Rodrigues</h3>
+                <p>Educador Ambiental</p>
+                <p>Coordena as atividades educativas do zoológico.</p>
+            </div>
+            <div class="funcionario">
+                <img src="foto_funcionario3.jpg" alt="Funcionário 3">
+                <h3>Herque</h3>
+                <p>Veterinário</p>
+                <p>Cuida da saúde dos animais e realiza consultas.</p>
+            </div>
+            <div class="funcionario">
+                <img src="Images Funcionarios/Daivo.png" alt="Funcionário 4">
+                <h3>Daivo Chivale</h3>
+                <p>Assistente de Cuidados</p>
+                <p>Ajuda na alimentação e cuidados diários dos animais.</p>
+            </div>
+            <div class="funcionario">
+                <img src="Images Funcionarios/Fernando.png" alt="Funcionário 5">
+                <h3>Fernando Carlitos</h3>
+                <p>Curador do Zoológico</p>
+                <p>Responsável pela gestão e conservação das espécies.</p>
+            </div>
+            <div class="funcionario">
+                <img src="Images Funcionarios/Bartolomeu.jpg" alt="Funcionário 6">
+                <h3>Bartolomeu Jorge</h3>
+                <p>Técnico de Segurança</p>
+                <p>Assegura a segurança dos visitantes e dos animais.</p>
+            </div>
+        </section>
+
+        <section class="depoimentos" data-aos="fade-up">
+            <h2>Depoimentos de Visitantes</h2>
+            <blockquote class="active">
+                <p>"Uma experiência incrível! Os animais são bem cuidados e o lugar é lindo!" - Miquirice</p>
+            </blockquote>
+            <blockquote>
+                <p>"Adorei aprender sobre os animais e suas histórias. Voltarei com certeza!" - Laurinda</p>
+            </blockquote>
+            <blockquote>
+                <p>"A visita foi maravilhosa, a equipe é muito atenciosa!" - Armando</p>
+            </blockquote>
+        </section>
+
+        <!-- Seção Perguntas Frequentes -->
+        <section class="faq" data-aos="fade-up" >
+            <h2>Perguntas Frequentes</h2>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <h3>Quanto custa o bilhete de entrada?</h3>
+                <p>O bilhete custa 200 MZN para adultos e 100 MZN para crianças.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <h3>É possível realizar eventos no zoológico?</h3>
+                <p>Sim, oferecemos espaço para eventos privados, como festas de aniversário e workshops.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <h3>Os animais são bem cuidados?</h3>
+                <p>Todos os nossos animais são cuidados por uma equipa de veterinários experientes e recebem cuidados diários.</p>
+            </div>
+        </section>
+
+         <!-- Seção de Doação -->
+        <section class="doacao" data-aos="fade-up">
+            <h2>Ajude-nos a Conservar a Vida Selvagem</h2>
+            <p>Seu apoio é muito importante para nós! Faça uma doação e ajude a manter o Zoo da Oldy.</p>
+            <button id="doacaoBtn">Fazer Doação</button>
+            <p id="agradecimento">Obrigado por apoiar o Zoo da Oldy!</p>
+        </section>
+
+         <!-- Seção de Redes Sociais -->
+        <section class="redes-sociais" data-aos="fade-up">
+            <h2>Conecte-se Conosco</h2>
+            <p>Siga-nos nas redes sociais para actualizações e novidades!</p>
+            <a href="https://facebook.com/zoodoldy" data-tooltip="Facebook">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            <a href="https://instagram.com/zoodoldy" data-tooltip="Instagram">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="https://twitter.com/zoodoldy" data-tooltip="Twitter">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Zoo da Oldy. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Animação do botão de doação
+        document.getElementById("doacaoBtn").addEventListener("click", function() {
+            const agradecimento = document.getElementById("agradecimento");
+            agradecimento.style.display = "block";
+            setTimeout(() => {
+                agradecimento.style.display = "none";
+            }, 3000); // A mensagem é escondida após 3 segundos
+        });
+
+        // Rotação automática de depoimentos
+        let depoimentos = document.querySelectorAll('.depoimentos blockquote');
+        let currentIndex = 0;
+
+        setInterval(() => {
+            depoimentos[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % depoimentos.length;
+            depoimentos[currentIndex].classList.add('active');
+        }, 5000);
+
+        // Interatividade FAQ
+        function toggleFaq(item) {
+            item.classList.toggle('active');
+        }
+
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+
+</body>
+</html>

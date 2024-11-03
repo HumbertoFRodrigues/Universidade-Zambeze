@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Zoo da Oldy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@700&display=swap"           rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" />
+    <link rel="icon" href="Favicon/logo.png" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 1px;
+            background-color:  #28a745;
+            color: white;
+            animation: slideInDown 0.5s;
+        }
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 5px;
+            display: block;
+            font-size: 2em;
+            margin-block-start: 0.67em;
+            margin-block-end: 0.67em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            font-weight: bold;
+            unicode-bidi: isolate;
+        }
+        main {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        .contact-info {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            text-align: center;
+        }
+        .contact-info h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #28a745;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .contact-item img {
+            margin-right: 10px;
+        }
+        .contact-info a {
+            color: #28a745;
+            text-decoration: none;
+        }
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+        .contact-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin: 15px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .contact-button:hover {
+            background-color: #34d058;
+        }
+        .contact-button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+        .mapa {
+            margin-top: 30px;
+        }
+        .mapa h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .social-media {
+            margin-top: 30px;
+        }
+        .social-media h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+        }
+        .social-icons a {
+            margin: 0 10px;
+        }
+        .newsletter {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .newsletter input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70%;
+            max-width: 300px;
+            margin-right: 10px;
+        }
+        .newsletter button {
+            padding: 10px 15px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #28a745;
+            color: white;
+            margin-top: 40px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .contact-info h2 {
+                font-size: 1.5em;
+            }
+            .contact-button {
+                width: 100%;
+                margin: 10px 0;
+            }
+            .contact-item img {
+                width: 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Zoo da Oldy</h1>
+    </header>
+
+    <main>
+        <section class="contact-info" data-aos="fade-up">
+            <h2>Informações de Contacto</h2>
+            <div class="contact-item">
+                <img src="https://img.icons8.com/ios-glyphs/30/28a745/marker.png">
+                <p><strong>Endereço:</strong> Av. Alfredo Lawley, nr. 670, Matacuane, Beira, Sofala, Moçambique.</p>
+            </div>
+            <div class="contact-item">
+                <img src="https://img.icons8.com/ios-glyphs/30/28a745/new-post.png">
+                <p><strong>Email:</strong> <a href="mailto:contacto@zoodaoldycom">contacto@zoodaoldy.com</a></p>
+            </div>
+            <div class="contact-item">
+                <img src="https://img.icons8.com/ios-glyphs/30/28a745/phone.png">
+                <p><strong>Celular:</strong> <a href="tel:+258841230456">+258 84 1230 456</a></p>
+            </div>
+            <div class="contact-item">
+                <img src="https://img.icons8.com/ios-glyphs/30/28a745/phone.png">
+                <p><strong>Telefone:</strong> <a href="tel:+25823328043">+258 233 280 43</a>
+            </div>
+
+            <button class="contact-button" onclick="window.location.href='mailto:contactozoodaoldy.com';">Enviar Email</button>
+            <button class="contact-button" onclick="window.location.href='tel:+258841230456';">Ligar Agora</button>
+
+            <div class="mapa" data-aos="fade-up">
+                <h3>Localização</h3>
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3352.6934770641166!2d34.864894!3d-19.8321623!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1f2a4027d25b54c1%3A0x332692b555cb6034!2sUniversity%20Zambeze%20-%20UniZambeze!5e0!3m2!1sen!2s!4v1698376391023" 
+                    width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
+
+        <section class="social-media" data-aos="fade-up">
+            <h3>Siga-nos nas Redes Sociais</h3>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/" target="_blank"><img src="https://img.icons8.com/ios-glyphs/30/28a745/instagram-new.png" alt="Instagram"></a>
+                <a href="https://www.facebook.com/" target="_blank"><img src="https://img.icons8.com/ios-glyphs/30/28a745/facebook-new.png" alt="Facebook"></a>
+                <a href="https://twitter.com/" target="_blank"><img src="https://img.icons8.com/ios-glyphs/30/28a745/twitter-squared.png" alt="Twitter"></a>
+            </div>
+        </section>
+
+        <section class="newsletter" data-aos="fade-up">
+            <h3>Inscreva-se para Actualizações</h3>
+            <input type="email" placeholder="Seu email" aria-label="Insira seu email">
+            <button class="contact-button">Subscrever</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Zoo da Oldy. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>
