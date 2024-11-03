@@ -1,2 +1,2 @@
-# INFOII-2023
-Conteúdo das aulas praticas da diciplina de Informática II ( Fundamentos da Programação) 2023 - Docente: F.Chimbinde
+# PRWE-2024
+Conteúdo das aulas praticas da diciplina de Programação Web  2024 - Docente: Félix Macueia
