@@ -1,0 +1,134 @@
+/* Estilo geral */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    width: 100%;
+}
+
+/* Barra lateral */
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sidebar h2 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+.sidebar .admin-button {
+    margin-top: auto;
+    background-color: #4CAF50;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sidebar .admin-button:hover {
+    background-color: #45a049;
+}
+
+/* Conteúdo principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.main-content h1 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Estatísticas de animais */
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.stats .stat-box {
+    background-color: #eee;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100px;
+}
+
+.stats .stat-box h3 {
+    color: #333;
+    font-size: 18px;
+    margin: 0;
+}
+
+.stats .stat-box p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Botão de sair */
+.logout {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.logout:hover {
+    background-color: #c0392b;
+}

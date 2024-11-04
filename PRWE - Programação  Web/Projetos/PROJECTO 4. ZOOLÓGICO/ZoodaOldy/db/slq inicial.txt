@@ -1,0 +1,118 @@
+Esses sao todos os comandos que usamos para criacao da base de dados e as tabelas necessárias
+
+
+-- Criar banco de dados
+CREATE DATABASE IF NOT EXISTS zoo_da_oldy;
+USE zoo_da_oldy;
+
+-- Tabela de níveis de usuário
+CREATE TABLE niveis (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nivel_nome ENUM('administrador', 'funcionario', 'visitante') NOT NULL
+);
+
+-- Tabela de usuários
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nivel_id INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    apelido VARCHAR(100),
+    sexo ENUM('M', 'F', 'Outro') NOT NULL,
+    endereco VARCHAR(255),
+    nacionalidade VARCHAR(100),
+    telefone VARCHAR(15),
+    data_nascimento DATE,
+    ocupacao VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (nivel_id) REFERENCES niveis(id)
+);
+
+-- Tabela de animais
+CREATE TABLE animais (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    especie VARCHAR(100) NOT NULL,
+    idade INT,
+    habitat VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de funcionários
+CREATE TABLE funcionarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    cargo VARCHAR(50) NOT NULL,
+    data_contratacao DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+-- Tabela de visitantes (registro de visitas)
+CREATE TABLE visitantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    data_visita DATE NOT NULL,
+    quantidade INT NOT NULL,
+    tipo_ingresso VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+-- Inserir níveis de usuário
+INSERT INTO niveis (nivel_nome) VALUES ('administrador'), ('funcionario'), ('visitante');
+
+
+ALTER TABLE usuarios ADD COLUMN reset_token VARCHAR(255) DEFAULT NULL;
+
+
+-- Criar tabela de reclamações
+CREATE TABLE reclamacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo VARCHAR(255) NOT NULL,
+    problema_animal VARCHAR(255),
+    comentarios TEXT,
+    sugestoes TEXT,
+    audio_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+CREATE TABLE reservas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    adultos INT NOT NULL,
+    criancas INT NOT NULL,
+    safari INT DEFAULT 0,
+    alimentacao INT DEFAULT 0,
+    hospedagem INT DEFAULT 0,
+    espaco_evento INT DEFAULT 0,
+    total DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE especies (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    data_aquisicao DATE NOT NULL,
+    numero_animais INT(11) NOT NULL,
+    numero_femeas INT(11) NOT NULL,
+    peso_maximo FLOAT NOT NULL,
+    viabilidade_acasalamento VARCHAR(100) NOT NULL,
+    idade_maxima INT(11) NOT NULL
+);
+
+
+
+    
+    Boas praticas..
+    Uso do arquivo de conexão: Sempre que precisar interagir com o banco de dados, importe o db_conexao.php em
+     outros arquivos PHP, para que não seja necessário reescrever a conexão.
+
+    Fechamento da Conexão: Após executar as operações no banco de dados, é uma boa prática fechar a conexão.
+     Adicione o comando $conn->close(); ao final dos scripts que usarem o banco de dados, 
+     especialmente em páginas que realizam muitas consultas.    

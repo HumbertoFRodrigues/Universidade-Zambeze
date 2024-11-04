@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Animais</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f3f3f3;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            background-color: #4CAF50;
+            width: 100%;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #fff;
+        }
+
+        .album {
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .galeria {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .galeria .imagem {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transform: translateZ(0);
+            transition: transform 0.2s;
+        }
+
+        .galeria img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .galeria .imagem:hover img {
+            transform: scale(1.1);
+        }
+
+        .galeria .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .galeria .imagem:hover .overlay {
+            opacity: 1;
+        }
+
+        nav {
+            margin: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        nav button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        nav button.active {
+            background-color: #45a049;
+        }
+
+        nav button:hover {
+            background-color: #45a049;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+            z-index: 1000;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        .lightbox .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Galeria de Animais</h1>
+    </header>
+
+    <nav>
+        <button onclick="filtrarCategoria('')" class="active">🐾 Todos</button>
+        <button onclick="filtrarCategoria('Mamíferos')">🦁 Mamíferos</button>
+        <button onclick="filtrarCategoria('Aves')">🦜 Aves</button>
+        <button onclick="filtrarCategoria('Répteis')">🐍 Répteis</button>
+    </nav>
+
+    <div id="galeria-container" class="album"></div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="fecharLightbox()">
+        <span class="close" onclick="fecharLightbox()">×</span>
+        <img id="lightbox-img" src="" alt="Imagem ampliada">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const animais = [
+                { categoria: 'Mamíferos', imagens: ['Galeria/Mamíferos/Chita.jpg', 'Galeria/Mamíferos/Leão.jpg', 'Galeria/Mamíferos/Leopardo.jpg'] },
+                { categoria: 'Aves', imagens: ['Galeria/Aves/Passarinho.jpg', 'Galeria/Aves/Pavao.jpg', 'Galeria/Aves/Tucano.jpg'] },
+                { categoria: 'Répteis', imagens: ['Galeria/Répteis/Cobra.jpg', 'Galeria/Répteis/Crocodilo.jpg', 'Galeria/Répteis/Tartaruga.jpg'] }
+            ];
+    
+            const galeriaContainer = document.getElementById('galeria-container');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+    
+            function criarGaleria(categoriaFiltrada = '') {
+                galeriaContainer.innerHTML = '';
+    
+                animais.forEach(animal => {
+                    if (categoriaFiltrada && animal.categoria !== categoriaFiltrada) return;
+    
+                    const galeria = document.createElement('div');
+                    galeria.classList.add('galeria');
+    
+                    animal.imagens.forEach(imagem => {
+                        const imagemDiv = document.createElement('div');
+                        imagemDiv.classList.add('imagem');
+                        imagemDiv.onclick = () => abrirLightbox(imagem);
+    
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imagem;
+                        imgElement.alt = `Imagem de ${animal.categoria.toLowerCase()}`;
+    
+                        const overlay = document.createElement('div');
+                        overlay.classList.add('overlay');
+                        overlay.textContent = animal.categoria;
+    
+                        imagemDiv.appendChild(imgElement);
+                        imagemDiv.appendChild(overlay);
+                        galeria.appendChild(imagemDiv);
+                    });
+    
+                    galeriaContainer.appendChild(galeria);
+                });
+            }
+    
+            function filtrarCategoria(categoria) {
+                criarGaleria(categoria);
+                document.querySelectorAll('nav button').forEach(button => {
+                    button.classList.remove('active');
+                    if (button.innerText.includes(categoria || 'Todos')) button.classList.add('active');
+                });
+            }
+    
+            function abrirLightbox(imagem) {
+                lightbox.style.display = 'flex';
+                lightboxImg.src = imagem;
+            }
+    
+            function fecharLightbox() {
+                lightbox.style.display = 'none';
+                lightboxImg.src = '';  // Limpa a imagem para evitar pré-carregamento desnecessário
+            }
+    
+            // Fecha o lightbox ao clicar fora da imagem ou pressionar "Esc"
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox || e.target.classList.contains('close')) {
+                    fecharLightbox();
+                }
+            });
+    
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    fecharLightbox();
+                }
+            });
+    
+            criarGaleria();
+        });
+    </script>
+    </body>
+</html>
