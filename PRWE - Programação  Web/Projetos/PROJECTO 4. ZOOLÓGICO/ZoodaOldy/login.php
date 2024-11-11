@@ -2,9 +2,25 @@
 session_start();
 require 'db_conexao.php'; // Importando o arquivo de conexão com o banco de dados
 
+// Definir o fuso horário
+date_default_timezone_set('Africa/Harare');
+
+// Definindo tempo de expiração da sessão
+$session_timeout = 1800; // 30 minutos em segundos
+
+// Verificando se a sessão já existe e se a última atividade foi há mais de 30 minutos
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $session_timeout)) {
+    // A sessão expirou, destruir a sessão
+    session_unset();
+    session_destroy();
+    echo "<script>alert('Sua sessão expirou. Por favor, faça login novamente.');</script>";
+}
+
+$_SESSION['LAST_ACTIVITY'] = time(); // Atualizando o timestamp da última atividade
+
 // Lógica de Login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $conn = conectarBancoDeDados(); // Conexão ao banco de dados - nossa Funçao
+    $conn = conectarBancoDeDados(); // Conexão ao banco de dados - nossa Função
 
     if (isset($_POST['email-username']) && isset($_POST['password'])) {
         $usuario = trim($_POST['email-username']);
@@ -22,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Verificando a senha
                 if (password_verify($senha, $usuario_data['password'])) {
                     $_SESSION['user_id'] = $usuario_data['id'];
-                    $_SESSION['nivel_id'] = $usuario_data['nivel_id']; // Verificando o nível de acesso pelo id atribuido ao usuario.
+                    $_SESSION['nivel_id'] = $usuario_data['nivel_id']; // Verificando o nível de acesso pelo id atribuído ao usuário.
 
                     // Redirecionando ao painel com base no nível do usuário
                     switch ($usuario_data['nivel_id']) {
@@ -53,11 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    $conn = null; // Fechando a conexão com bd
+    $conn = null; // Fechando a conexão com o banco de dados
 }
 ?>
 
-<!--HTML para o formulario-->
+<!-- HTML para o formulário -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -91,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-    <!-- Modal de Redefinição de Senha apenas em html retirado pos agora vamos para outro arquivo php -->
+    <!-- Modal de Redefinição de Senha apenas em html retirado pois agora vamos para outro arquivo php -->
     <div id="reset-password-modal" style="display:none;">
         <div class="modal-content">
             <span class="close" onclick="document.getElementById('reset-password-modal').style.display='none'">&times;</span>
@@ -122,4 +138,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     <script src="js/carousel.js"></script>
 </body>
-</html>
+</html> 

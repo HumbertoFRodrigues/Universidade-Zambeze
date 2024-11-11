@@ -44,7 +44,7 @@ O sistema de gerenciamento de zoológico permite que administradores adicionem,
 
 # Funcionários
 - Usuario: humbertofuncionario      ou          humberto@zoodaoldy.com     
-- Senha:  #2024Humbeto$2420
+- Senha:  #Humberto.2024
 
 - Usuario: daivo                    ou          daivo@zoodaoldy.com
 - Senha: Daivo1234    

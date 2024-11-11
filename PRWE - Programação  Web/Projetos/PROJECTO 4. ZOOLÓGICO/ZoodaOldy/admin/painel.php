@@ -203,10 +203,13 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         <h2>Painel</h2>
         <ul>
             <li class="<?php echo $active_menu == 'dashboard' ? 'active' : ''; ?>"><a href="?page=estatistica">Estatísticas</a></li>
-            <li class="<?php echo $active_menu == 'galeria' ? 'active' : ''; ?>"><a href="?page=especies">Especies</a></li>
-            <li class="<?php echo $active_menu == 'reserva' ? 'active' : ''; ?>"><a href="?page=usuarios">Usuarios</a></li>
+            <li class="<?php echo $active_menu == 'galeria' ? 'active' : ''; ?>"><a href="?page=adicionar_especie">Adicionar Especies</a></li>
+            <li class="<?php echo $active_menu == 'perfil' ? 'active' : ''; ?>"><a href="?page=gerenciar_especies">Gerenciar Especies</a></li>
+            <li class="<?php echo $active_menu == 'perfil' ? 'active' : ''; ?>"><a href="?page=galeria_especies">Ver Galeria</a></li>
+            <li class="<?php echo $active_menu == 'perfil' ? 'active' : ''; ?>"><a href="?page=gerenciar_reservas">Reservas</a></li>
+            <li class="<?php echo $active_menu == 'reserva' ? 'active' : ''; ?>"><a href="?page=gerir_usuarios">Usuarios</a></li>
             <li class="<?php echo $active_menu == 'perfil' ? 'active' : ''; ?>"><a href="?page=perfil">Perfil</a></li>
-            <li class="<?php echo $active_menu == 'queixas' ? 'active' : ''; ?>"><a href="?page=listar_reclamacoes">Queixas e Sugestões</a>
+            <li class="<?php echo $active_menu == 'queixas' ? 'active' : ''; ?>"><a href="?page=gerenciar_reclamacoes">Queixas e Sugestões</a>
         </ul>
     </div>
 

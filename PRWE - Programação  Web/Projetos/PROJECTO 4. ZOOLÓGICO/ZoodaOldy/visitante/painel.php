@@ -36,18 +36,14 @@ $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch();
 
 // Verifica o sexo para exibir o avatar correto
-$avatar = '';
-if ($user['sexo'] == 'M') {
-    $avatar = '../imagens/icones/homem.png';
-} elseif ($user['sexo'] == 'F') {
-    $avatar = '../imagens/icones/mulher.png';
-} else {
-    $avatar = '../imagens/icones/user.png';
-}
+$avatar = match ($user['sexo']) {
+    'M' => '../imagens/icones/homem.png',
+    'F' => '../imagens/icones/mulher.png',
+    default => '../imagens/icones/user.png',
+};
 
 // Define o item ativo da sidebar
 $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -55,8 +51,6 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../imagens/Favicon/logo.png" type="image/x-icon">
-
-
     <title>Painel do Usuário</title>
     <style>
         /* Estilos para a barra superior */
@@ -67,16 +61,11 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             padding: 10px 20px;
             background-color: #ffffff;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            position: relative;
             margin-left: 200px;
+            position: relative; /* Ajuste para evitar sobreposição */
+            z-index: 10; /* Garante que fique acima do conteúdo */
         }
         
-        .top-bar .logo {
-            display: flex;
-            align-items: center;
-        }
-
         .top-bar .logo img {
             height: 40px;
             margin-right: 10px;
@@ -86,17 +75,15 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             display: flex;
             align-items: center;
         }
-        
+
         .top-bar .user-info .avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
             margin-right: 10px;
         }
-        
+
         .top-bar .logout-btn {
-            color: #000;
-            text-decoration: none;
             padding: 5px 10px;
             background-color: #f0f0f0;
             border-radius: 5px;
@@ -113,11 +100,12 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             left: 0;
             padding-top: 20px;
             color: white;
-            z-index: 1000;
+            text-align: left; /* Mantém tudo alinhado à esquerda */
         }
         
         .sidebar h2 {
             text-align: center;
+            font-weight: bold;
         }
         
         .sidebar ul {
@@ -126,28 +114,34 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         }
         
         .sidebar ul li {
-            padding: 15px;
+            padding: 10px 15px; /* Ajuste do espaçamento entre itens */
+            text-align: left;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
         }
         
         .sidebar ul li a {
             color: white;
             text-decoration: none;
-            display: block;
+            display: block; /* Exibe como bloco para alinhar à esquerda */
+            width: 100%;
+            background: none; /* Remove fundo */
+            border: none; /* Remove borda */
         }
         
-        /* Destaca o item ativo */
+        /* Estilo para o item ativo */
         .sidebar ul li.active {
-            background-color: #45a049;
+            background-color: #B0B0B0; /* Fundo cinza para indicar item ativo */
+            font-weight: normal; /* Mantém a fonte normal */
         }
 
         /* Estilos para o conteúdo principal */
         .main-content {
             margin-left: 220px; 
             padding: 20px;
-            box-sizing: border-box;
             width: calc(100% - 220px);
             min-height: calc(100vh - 50px); 
-            padding-bottom: 40px; 
+            box-sizing: border-box; /* Garante que o padding não cause overflow */
         }
         
         /* Estilos para o rodapé */
@@ -160,28 +154,73 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             bottom: 0; 
             left: 0;
             width: 100%; 
-            z-index: 1000; 
         }
-        
-        /* Responsividade */
-        @media screen and (max-width: 768px) {
-            .sidebar {
-                position: static;
-                width: 100%;
-                height: auto;
-            }
 
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding-bottom: 40px; 
-            }
-
-            footer {
-                position: relative; 
-                width: 100%;
-            }
+        /* Evitar overflow no body */
+        body {
+            margin: 0; /* Remove margens padrão */
+            overflow-x: hidden; /* Esconde rolagem horizontal */
         }
+
+        /* Barra de Navegação Superior (Top Bar) */
+.top-bar {
+    display: flex;
+    align-items: center;  /* Alinha todos os elementos verticalmente ao centro */
+    justify-content: space-between;  /* Distribui espaço adequadamente entre os elementos da barra */
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
+    margin-left: 200px;  /* Para compensar a largura da sidebar, se houver */
+}
+
+.top-bar .logo {
+    display: flex;
+    align-items: center;  /* Alinha logo e texto verticalmente */
+}
+
+.top-bar .logo img {
+    height: 40px;
+    margin-right: 10px;  /* Espaço entre a imagem da logo e o texto */
+}
+
+.top-bar .logo span {
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;  /* Ajuste de cor para se adequar ao design */
+}
+
+.top-bar .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .user-info .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.top-bar .logout-btn {
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    border: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar .logout-btn:hover {
+    background-color: #e0e0e0;
+}
+
+
     </style>
 </head>
 <body>
@@ -202,52 +241,21 @@ $active_menu = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
     <div class="sidebar">
         <h2>Painel</h2>
         <ul>
-            <li class="<?php echo $active_menu == 'dashboard' ? 'active' : ''; ?>"><a href="?page=estatistica">Estatísticas</a></li>
-            <li class="<?php echo $active_menu == 'galeria' ? 'active' : ''; ?>"><a href="?page=galeria">Galeria de Fotos</a></li>
-            <li class="<?php echo $active_menu == 'informacoes' ? 'active' : ''; ?>"><a href="?page=listar_especies">Informações das Espécies</a></li>
-            <li class="<?php echo $active_menu == 'reserva' ? 'active' : ''; ?>"><a href="?page=reserva">Reserva</a></li>
+            <li class="<?php echo $active_menu == 'estatistica' ? 'active' : ''; ?>"><a href="?page=estatistica">Estatísticas</a></li>
+            <li class="<?php echo $active_menu == 'galeria' ? 'active' : ''; ?>"><a href="?page=galeria_especies">Galeria de Fotos</a></li>
+            <li class="<?php echo $active_menu == 'informacoes' ? 'active' : ''; ?>"><a href="?page=informacao_especies">Informações</a></li>
+            <li class="<?php echo $active_menu == 'reserva' ? 'active' : ''; ?>"><a href="?page=pagina_reserva_visitante">Reserva</a></li>
             <li class="<?php echo $active_menu == 'perfil' ? 'active' : ''; ?>"><a href="?page=perfil">Perfil</a></li>
-            <li class="<?php echo $active_menu == 'queixas' ? 'active' : ''; ?>"><a href="?page=queixas">Queixas e Sugestões</a>
-            <ul class="sub-list">
-            <li><a href="?page=listar_reclamacoes">Minhas Sugestões</a></li></li>
+            <li class="<?php echo $active_menu == 'contato' ? 'active' : ''; ?>"><a href="?page=contato">Contato</a></li>
         </ul>
     </div>
-
-
-
-
-<style>
-    /* Estilos para a sub-lista */
-    .sub-list {
-        display: none; /* Esconde a sub-lista inicialmente */
-        margin-left: 20px; /* Indentação para a sub-lista */
-    }
-    /* Estilo para o item ativo */
-    .active > .sub-list {
-        display: block; /* Mostra a sub-lista se o item estiver ativo */
-    }
-</style>
-
-<script>
-    // Adiciona um evento de clique ao link principal
-    const mainLink = document.querySelector('li.active > a');
-
-    if (mainLink) {
-        mainLink.addEventListener('click', (event) => {
-            event.preventDefault(); // Evita a navegação padrão
-            const subList = mainLink.nextElementSibling; // Seleciona a sub-lista seguinte
-            subList.style.display = subList.style.display === 'none' || subList.style.display === '' ? 'block' : 'none'; // Alterna a visibilidade
-        });
-    }
-</script>
-
 
     <!-- Conteúdo principal -->
     <div class="main-content">
         <?php
         // Inclui o conteúdo da página correspondente
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $page_file = "$page.php"; // Altere para o caminho correto se necessário
+        $page_file = "$page.php";
         
         if (file_exists($page_file)) {
             include $page_file;

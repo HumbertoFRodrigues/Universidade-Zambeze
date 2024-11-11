@@ -107,8 +107,54 @@ CREATE TABLE especies (
 );
 
 
+ALTER TABLE reclamacoes ADD COLUMN resposta TEXT DEFAULT NULL;
 
-    
+
+CREATE TABLE logins_temporarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(32) NOT NULL UNIQUE,
+    validade INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+
+ALTER TABLE logins_temporarios
+ADD COLUMN expira_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE logins_temporarios
+    MODIFY COLUMN `user_id` INT NOT NULL,
+    MODIFY COLUMN `token` VARCHAR(255) NOT NULL,
+    MODIFY COLUMN `expira_em` DATETIME NOT NULL,
+    ADD COLUMN `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+CREATE TABLE especies (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    data_aquisicao DATE NOT NULL,
+    num_animais INT NOT NULL,
+    num_femeas INT NOT NULL,
+    peso_maximo FLOAT NOT NULL,
+    tipo ENUM('mamifero', 'reptil', 'passaro') NOT NULL,
+    idade_maxima INT NOT NULL,
+    mes_acasalamento_inicio INT NOT NULL,
+    mes_acasalamento_fim INT NOT NULL,
+    cor_caracteristica VARCHAR(100) NOT NULL,
+    gestacao_duracao INT NULL,
+    comprimento_min FLOAT NULL,
+    comprimento_max FLOAT NULL
+);
+
+CREATE TABLE fotos_especies (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    especie_id INT,
+    caminho VARCHAR(255) NOT NULL,
+    FOREIGN KEY (especie_id) REFERENCES especies(id) ON DELETE CASCADE
+);
+
+
+
     Boas praticas..
     Uso do arquivo de conexão: Sempre que precisar interagir com o banco de dados, importe o db_conexao.php em
      outros arquivos PHP, para que não seja necessário reescrever a conexão.
