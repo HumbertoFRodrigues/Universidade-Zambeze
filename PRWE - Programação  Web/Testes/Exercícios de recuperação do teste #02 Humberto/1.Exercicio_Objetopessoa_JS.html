@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício 1 - Objeto Pessoa</title>
+</head>
+<body>
+    <h1>Exercício 1 - Objeto Pessoa</h1>
+
+    <!-- Div para exibir o resultado -->
+    <div id="saida"></div>
+
+    <script>
+        // Criando o objeto 'pessoa'
+        let pessoa = {
+            primeiroNome: "Rodrigues",  // Propriedade de nome
+            ultimoNome: "Silva",   // Propriedade de sobrenome
+            
+            // Método para saudação
+            saudacao: function() {
+                document.getElementById('saida').innerHTML += "Olá a todos<br>";
+                console.log("Olá a todos");  // Exibe no console do navegador..
+            },
+            
+            // Método para mostrar o nome completo
+            nomeCompleto: function() {
+                return this.primeiroNome + " " + this.ultimoNome;
+            }
+        };
+
+        // Exibindo a saudação e o nome completo
+        pessoa.saudacao();
+        document.getElementById('saida').innerHTML += "Nome completo: " + pessoa.nomeCompleto();
+        console.log("Nome completo:", pessoa.nomeCompleto());  // Exibe no console do navegador...
+    </script>
+
+
+<style>
+    /* Estilo simples para a página */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        text-align: center; /* Centraliza o texto */
+        padding: 20px;
+    }
+
+    /* Título centralizado */
+    h1 {
+        color: #007BFF;
+    }
+
+    /* Estilo da caixa onde o resultado será exibido */
+    #saida {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        display: inline-block; /* Faz com que a caixa tenha um tamanho ajustado ao conteúdo */
+        text-align: left; /* Alinha o texto à esquerda dentro da caixa */
+    }
+</style>
+
+</body>
+</html>
