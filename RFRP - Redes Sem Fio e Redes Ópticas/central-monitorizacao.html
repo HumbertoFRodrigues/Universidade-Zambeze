@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Segurança — Joalheria G7-RESF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/mqtt@5/dist/mqtt.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#10151f; --panel2:#161d2b; --line:#243049;
+    --ink:#dbe4f0; --muted:#7c8aa5; --plant:#9fb4d4; --plant-fill:#0e1626;
+    --ok:#39d98a; --info:#5aa8ff; --alerta:#ffb245; --crit:#ff4d4d; --node:#5aa8ff;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --disp:'Space Grotesk',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:
+      radial-gradient(1200px 600px at 70% -10%, #122036 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink);font-family:var(--disp);min-height:100vh}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(10,14,20,.7);
+    backdrop-filter:blur(6px);position:sticky;top:0;z-index:5}
+  .brand h1{font-size:18px;letter-spacing:.16em;margin:0;font-weight:700}
+  .brand p{margin:2px 0 0;font-size:11px;letter-spacing:.18em;color:var(--muted);
+    text-transform:uppercase;font-family:var(--mono)}
+  .status-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+  .chip{display:flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--line);
+    border-radius:999px;background:var(--panel)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 0 transparent}
+  .dot.live{background:var(--ok);box-shadow:0 0 10px var(--ok);animation:beat 2s infinite}
+  .dot.armed{background:var(--alerta);box-shadow:0 0 10px var(--alerta)}
+  @keyframes beat{50%{opacity:.4}}
+
+  main{display:grid;grid-template-columns:1.6fr .9fr;gap:18px;padding:18px 22px;max-width:1500px;margin:0 auto}
+  @media(max-width:980px){main{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card-h{display:flex;align-items:center;justify-content:space-between;
+    padding:11px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+  /* PLANTA */
+  .plant-wrap{position:relative;padding:14px}
+  .plant-wrap.alarme{animation:shake .4s linear infinite}
+  .plant-wrap.alarme::after{content:"";position:absolute;inset:6px;border:2px solid var(--crit);
+    border-radius:10px;pointer-events:none;animation:flash .7s steps(1) infinite}
+  @keyframes flash{50%{border-color:transparent}}
+  @keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}75%{transform:translate(-1px,1px)}}
+  svg{width:100%;height:auto;display:block}
+  .wall{fill:none;stroke:var(--plant);stroke-width:3}
+  .room{fill:var(--plant-fill);stroke:var(--line);stroke-width:1.5}
+  .rlabel{fill:var(--muted);font-family:var(--mono);font-size:11px;font-weight:500}
+  .vit{fill:#1b2740;stroke:#3a4d72;stroke-width:1.4;rx:3}
+  .vit-l{fill:var(--plant);font-family:var(--mono);font-size:10px;font-weight:700}
+  .door{fill:#3a4d72}
+  .node{fill:var(--node);stroke:#0a0e14;stroke-width:2}
+  .node-l{fill:#fff;font-family:var(--mono);font-size:10px;font-weight:700;text-anchor:middle;dominant-baseline:central}
+  .node-i{fill:#cdb4ff}
+  .cam{fill:none;stroke:#46577d;stroke-width:1.5}
+
+  /* highlights */
+  .hl-info  {animation:hlinfo  1.2s ease-in-out infinite}
+  .hl-alerta{animation:hlalerta .7s ease-in-out infinite}
+  .hl-critico{animation:hlcrit  .45s ease-in-out infinite}
+  @keyframes hlinfo  {0%,100%{fill:#1b2740}50%{fill:#2a52a8}}
+  @keyframes hlalerta{0%,100%{fill:#1b2740}50%{fill:#a86a1c}}
+  @keyframes hlcrit  {0%,100%{fill:#2a1320}50%{fill:#c41f1f}}
+  .node.hl-critico{animation:ncrit .45s ease-in-out infinite}
+  .node.hl-alerta {animation:nalerta .7s ease-in-out infinite}
+  @keyframes ncrit  {0%,100%{fill:var(--node);r:9}50%{fill:var(--crit);r:13}}
+  @keyframes nalerta{0%,100%{fill:var(--node)}50%{fill:var(--alerta)}}
+  .ellipse-expo{fill:rgba(90,168,255,.05);stroke:#3a4d72;stroke-width:1.5}
+  .ellipse-expo.hl-critico{animation:exalarm .5s ease-in-out infinite}
+  @keyframes exalarm{0%,100%{fill:rgba(255,77,77,.05);stroke:#3a4d72}50%{fill:rgba(255,77,77,.28);stroke:var(--crit)}}
+
+  /* PAINEL DIREITO */
+  .side{display:flex;flex-direction:column;gap:18px}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.04em;
+    padding:12px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);
+    color:var(--ink);cursor:pointer;transition:.15s;text-align:left}
+  .btn:hover{border-color:#3a4d72;transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn .k{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.12em}
+  .btn.arm{border-color:#2a623f}.btn.arm:hover{background:#13261b}
+  .btn.dis{border-color:#314060}
+  .btn.fire{border-color:#5e2230;color:#ff8a8a}.btn.fire:hover{background:#2a1320}
+  .btn.mute{border-color:#3a4d72}
+
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+  .metric{background:var(--panel);padding:13px 16px}
+  .metric .v{font-family:var(--mono);font-size:22px;font-weight:700}
+  .metric .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:2px}
+
+  .log{height:340px;overflow-y:auto;padding:6px 0;font-family:var(--mono);font-size:12px}
+  .log::-webkit-scrollbar{width:8px}.log::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+  .ev{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:7px 16px;border-bottom:1px solid #0e1421}
+  .ev .t{color:var(--muted)}
+  .ev .b{display:flex;flex-direction:column;gap:1px}
+  .ev .top{display:flex;gap:8px;align-items:center}
+  .badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.08em}
+  .b-INFO{background:#13284a;color:var(--info)}
+  .b-ALERTA{background:#3a2a0e;color:var(--alerta)}
+  .b-CRITICO{background:#3a1015;color:var(--crit)}
+  .ev .topic{color:var(--muted);font-size:10px}
+  .ev .msg{color:var(--ink)}
+  .empty{color:var(--muted);text-align:center;padding:40px 20px;font-family:var(--mono);font-size:12px}
+
+  .banner{display:none;align-items:center;gap:12px;background:#2a0c0f;border:1px solid var(--crit);
+    color:#ffd2d2;padding:12px 18px;margin:0 22px;border-radius:12px;font-family:var(--mono);
+    font-weight:700;letter-spacing:.1em;animation:flash .7s steps(1) infinite}
+  body.alarme .banner{display:flex}
+  .banner .big{font-size:15px}
+  .legend{max-width:1500px;margin:0 auto;padding:0 22px 30px}
+  .legend .card-h{margin:0}
+  .legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--line)}
+  .leg{background:var(--panel);padding:13px 16px}
+  .leg h4{margin:0 0 4px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .leg p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+  .leg .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:middle}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms !important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>CENTRAL DE SEGURANÇA</h1>
+    <p>Joalheria · Rede de Sensores Sem Fio · G7-RESF</p>
+  </div>
+  <div class="status-row">
+    <div class="chip"><span class="dot" id="mqttDot"></span><span id="mqttTxt">a ligar…</span></div>
+    <div class="chip"><span class="dot" id="armDot"></span><span id="armTxt">—</span></div>
+    <div class="chip"><span id="clock">--:--:--</span></div>
+  </div>
+</header>
+
+<div class="banner" id="banner">
+  <span class="big">⚠ ALARME ACTIVO</span><span id="bannerMsg">Evento crítico detectado na rede.</span>
+</div>
+
+<main>
+  <!-- PLANTA -->
+  <section class="card">
+    <div class="card-h"><span>Planta — 15 m × 10 m</span><span id="lastEv">sem actividade</span></div>
+    <div class="plant-wrap" id="plantWrap">
+      <svg viewBox="0 0 780 540" xmlns="http://www.w3.org/2000/svg">
+        <!-- contorno -->
+        <rect class="wall" x="40" y="40" width="700" height="460" rx="4"/>
+        <line class="wall" x1="226" y1="40" x2="226" y2="200" stroke-width="3"/>
+        <line class="wall" x1="226" y1="270" x2="226" y2="500" stroke-width="3"/>
+
+        <!-- zona privada -->
+        <rect class="room" x="52" y="52" width="100" height="120"/>
+        <text class="rlabel" x="62" y="118">10 escritório</text>
+        <rect class="room" x="158" y="52" width="58" height="120"/>
+        <text class="rlabel" x="166" y="118">11 wc</text>
+        <rect class="room" x="52" y="300" width="150" height="184"/>
+        <text class="rlabel" x="62" y="396">12 caixa</text>
+        <rect class="door" x="56" y="470" width="34" height="14" rx="2"/>
+        <text class="rlabel" x="60" y="465" style="font-size:9px">R</text>
+
+        <!-- vitrines parede (1–9) -->
+        <g id="zona-vitrines">
+          <rect class="vit" x="250" y="62"  width="82" height="22"/><text class="vit-l" x="287" y="77">1</text>
+          <rect class="vit" x="360" y="62"  width="82" height="22"/><text class="vit-l" x="397" y="77">2</text>
+          <rect class="vit" x="470" y="62"  width="82" height="22"/><text class="vit-l" x="507" y="77">3</text>
+          <rect class="vit" x="580" y="62"  width="82" height="22"/><text class="vit-l" x="617" y="77">4</text>
+          <rect class="vit" x="415" y="142" width="82" height="22"/><text class="vit-l" x="452" y="157">5</text>
+          <rect class="vit" x="300" y="208" width="82" height="22"/><text class="vit-l" x="337" y="223">6</text>
+          <rect class="vit" x="410" y="208" width="82" height="22"/><text class="vit-l" x="447" y="223">7</text>
+          <rect class="vit" x="520" y="208" width="82" height="22"/><text class="vit-l" x="557" y="223">8</text>
+          <rect class="vit" x="700" y="250" width="22" height="80"/><text class="vit-l" x="705" y="296">9</text>
+        </g>
+
+        <!-- vitrines únicas (16,17,18) -->
+        <g id="zona-unicas">
+          <rect class="vit" id="v16" x="356" y="176" width="44" height="44"/><text class="vit-l" x="370" y="202">16</text>
+          <rect class="vit" id="v18" x="408" y="356" width="42" height="42"/><text class="vit-l" x="420" y="382">18</text>
+          <rect class="vit" id="v17" x="694" y="384" width="40" height="50"/><text class="vit-l" x="700" y="414">17</text>
+        </g>
+
+        <!-- exposição central 15 -->
+        <ellipse class="ellipse-expo" id="zona-expo" cx="560" cy="378" rx="118" ry="78"/>
+        <text class="rlabel" x="548" y="382" style="font-size:13px;fill:var(--plant)">15</text>
+
+        <!-- portas -->
+        <g id="zona-portas">
+          <rect class="door" id="porta-13" x="250" y="494" width="74" height="12" rx="2"/>
+          <text class="rlabel" x="262" y="490" style="font-size:10px">13 saída</text>
+          <rect class="door" id="porta-14" x="734" y="226" width="12" height="62" rx="2"/>
+          <text class="rlabel" x="700" y="222" style="font-size:10px">14 entrada</text>
+        </g>
+
+        <!-- câmaras -->
+        <path class="cam" d="M60 60 l18 8 l-18 8 z"/>
+        <path class="cam" d="M720 76 l-18 8 l18 8 z"/>
+        <path class="cam" d="M720 470 l-18 -8 l18 -8 z"/>
+        <path class="cam" d="M236 470 l18 -8 l-18 -8 z"/>
+
+        <!-- nós ESP32 -->
+        <g id="nodes">
+          <circle class="node node-i" id="no-i" cx="150" cy="360" r="11"/><text class="node-l" x="150" y="360">i</text>
+          <circle class="node" id="no-h" cx="110" cy="78"  r="9"/><text class="node-l" x="110" y="78">h</text>
+          <circle class="node" id="no-g" cx="250" cy="100" r="9"/><text class="node-l" x="250" y="100">g</text>
+          <circle class="node" id="no-e" cx="470" cy="120" r="9"/><text class="node-l" x="470" y="120">e</text>
+          <circle class="node" id="no-c" cx="436" cy="318" r="9"/><text class="node-l" x="436" y="318">c</text>
+          <circle class="node" id="no-d" cx="716" cy="300" r="9"/><text class="node-l" x="716" y="300">d</text>
+          <circle class="node" id="no-a" cx="240" cy="468" r="9"/><text class="node-l" x="240" y="468">a</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- PAINEL -->
+  <aside class="side">
+    <div class="card">
+      <div class="card-h"><span>Comandos remotos</span></div>
+      <div class="controls">
+        <button class="btn arm"  data-cmd="ARMAR"><span class="k">Implícito</span>Armar sistema</button>
+        <button class="btn dis"  data-cmd="DESARMAR"><span class="k">Modo dia</span>Desarmar</button>
+        <button class="btn fire" data-cmd="ALARME"><span class="k">Explícito</span>Disparar alarme</button>
+        <button class="btn mute" data-cmd="SILENCIAR"><span class="k">Operador</span>Silenciar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span>Estado da rede</span></div>
+      <div class="metrics">
+        <div class="metric"><div class="v" id="mEvents">0</div><div class="l">eventos</div></div>
+        <div class="metric"><div class="v" id="mAlarms">0</div><div class="l">alarmes</div></div>
+        <div class="metric"><div class="v" id="mRssi">—</div><div class="l">sinal nó i (dBm)</div></div>
+        <div class="metric"><div class="v" id="mHb">—</div><div class="l">último heartbeat</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span>Eventos em tempo real</span><span id="logCount">0</span></div>
+      <div class="log" id="log"><div class="empty">À espera de eventos da rede…</div></div>
+    </div>
+  </aside>
+</main>
+
+<footer class="legend">
+  <div class="card">
+    <div class="card-h"><span>Legenda — para a apresentação</span></div>
+    <div class="legend-grid">
+      <div class="leg"><h4>Eventos</h4><p>Total de mensagens recebidas da rede desde que a central abriu.</p></div>
+      <div class="leg"><h4>Alarmes</h4><p>Número de vezes que o sistema entrou em estado de alarme.</p></div>
+      <div class="leg"><h4>Sinal nó i (dBm)</h4><p>Força do Wi-Fi do nó central. Mais perto de 0 é melhor (−50 ótimo, −85 no limite).</p></div>
+      <div class="leg"><h4>Último heartbeat</h4><p>Quando o nó central deu o último "sinal de vida" — envia um a cada 10 s.</p></div>
+      <div class="leg"><h4><span class="sw" style="background:#5aa8ff"></span>Azul · info</h4><p>Atividade normal: leitura de sensor ou porta aberta em horário de loja.</p></div>
+      <div class="leg"><h4><span class="sw" style="background:#ffb245"></span>Âmbar · alerta</h4><p>Evento suspeito com o sistema armado.</p></div>
+      <div class="leg"><h4><span class="sw" style="background:#ff4d4d"></span>Vermelho · crítico</h4><p>Alarme ativo: a zona pisca, a planta fica com moldura vermelha e a sirene toca.</p></div>
+      <div class="leg"><h4>Armado / desarmado</h4><p>Armado = loja fechada, qualquer evento dispara alarme. Desarmado = horário normal.</p></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== Configuração (igual ao firmware ESP32) =====
+  const BROKER = 'wss://broker.hivemq.com:8884/mqtt';
+  const BASE   = 'joalheria/g7resf';
+  const T_CMD  = BASE + '/comando';
+
+  // ===== Elementos =====
+  const $ = id => document.getElementById(id);
+  const log = $('log'), wrap = $('plantWrap'), banner = $('banner');
+  let nEvents = 0, nAlarms = 0, alarmeOn = false, somOn = true, audioCtx = null;
+
+  // relógio
+  setInterval(()=>{ $('clock').textContent = new Date().toLocaleTimeString('pt-PT'); }, 1000);
+
+  // ===== Ligação MQTT =====
+  const client = mqtt.connect(BROKER, {
+    clientId: 'central-g7resf-' + Math.random().toString(16).slice(2,8),
+    reconnectPeriod: 2000, connectTimeout: 8000
+  });
+  client.on('connect', ()=>{ setMqtt(true); client.subscribe(BASE + '/#'); });
+  client.on('reconnect', ()=> setMqtt(false, 'a reconectar…'));
+  client.on('offline',   ()=> setMqtt(false, 'sem ligação'));
+  client.on('error',     ()=> setMqtt(false, 'erro de ligação'));
+  client.on('message', (topic, payload)=> handle(topic, payload.toString()));
+
+  function setMqtt(ok, txt){
+    $('mqttDot').className = 'dot' + (ok ? ' live' : '');
+    $('mqttTxt').textContent = ok ? 'broker online' : (txt || 'a ligar…');
+  }
+
+  // ===== Processamento de eventos =====
+  function handle(topic, raw){
+    let d; try { d = JSON.parse(raw); } catch { d = { evento: raw, nivel:'INFO' }; }
+    const nivel = (d.nivel || 'INFO').toUpperCase();
+    const sub = topic.replace(BASE + '/', '');
+
+    // estado armado / heartbeat
+    if (typeof d.armado === 'boolean') setArmado(d.armado);
+    if (sub === 'status'){
+      if (d.evento === 'heartbeat'){ $('mRssi').textContent = d.valor; $('mHb').textContent = 'agora'; }
+    }
+
+    // mapear para a planta
+    paintZone(sub, nivel);
+
+    // alarme global
+    if (sub === 'alarme' || nivel === 'CRITICO'){
+      if (sub === 'alarme'){ raiseAlarm(d.evento || 'Evento crítico'); }
+    }
+    if (sub === 'status' && /desarmado/i.test(d.evento||'')) clearAlarm();
+
+    addLog(sub, nivel, d.evento || raw);
+    nEvents++; $('mEvents').textContent = nEvents;
+    $('lastEv').textContent = sub + ' · ' + nivel.toLowerCase();
+  }
+
+  function paintZone(sub, nivel){
+    const cls = 'hl-' + nivel.toLowerCase();
+    const flash = (el)=>{ if(!el) return; el.classList.add(cls);
+      setTimeout(()=> el.classList.remove(cls), 4000); };
+
+    if (sub === 'pir'){ flash($('zona-expo')); flash($('no-c')); }
+    else if (sub === 'peso'){ document.querySelectorAll('#zona-vitrines .vit').forEach(flash); flash($('no-e')); }
+    else if (sub === 'luz'){ ['v16','v17','v18'].forEach(i=>flash($(i))); flash($('no-g')); flash($('no-d')); }
+    else if (sub === 'porta'){ flash($('porta-13')); flash($('porta-14')); flash($('no-a')); flash($('no-d')); }
+    else if (sub === 'alarme'){
+      $('zona-expo').classList.add('hl-critico');
+      document.querySelectorAll('.vit,.node,.door').forEach(e=>e.classList.add('hl-critico'));
+    }
+  }
+
+  function setArmado(on){
+    $('armDot').className = 'dot' + (on ? ' armed' : ' live');
+    $('armTxt').textContent = on ? 'SISTEMA ARMADO' : 'sistema desarmado';
+  }
+
+  // ===== Alarme global =====
+  function raiseAlarm(msg){
+    if (!alarmeOn){ nAlarms++; $('mAlarms').textContent = nAlarms; }
+    alarmeOn = true;
+    wrap.classList.add('alarme'); document.body.classList.add('alarme');
+    $('bannerMsg').textContent = msg;
+    if (somOn) startSiren();
+  }
+  function clearAlarm(){
+    alarmeOn = false;
+    wrap.classList.remove('alarme'); document.body.classList.remove('alarme');
+    document.querySelectorAll('.hl-critico').forEach(e=>e.classList.remove('hl-critico'));
+    stopSiren();
+  }
+
+  // ===== Sirene (Web Audio) =====
+  let sirenTimer = null;
+  function ensureAudio(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch{} } }
+  function beep(){
+    if(!audioCtx) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type='square'; o.frequency.value=880; o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.0001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.15, audioCtx.currentTime+.02);
+    g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime+.25);
+    o.start(); o.stop(audioCtx.currentTime+.26);
+  }
+  function startSiren(){ ensureAudio(); if(sirenTimer) return; beep(); sirenTimer=setInterval(beep,650); }
+  function stopSiren(){ if(sirenTimer){ clearInterval(sirenTimer); sirenTimer=null; } }
+
+  // ===== Log =====
+  function addLog(sub, nivel, msg){
+    const empty = log.querySelector('.empty'); if (empty) empty.remove();
+    const row = document.createElement('div'); row.className = 'ev';
+    const t = new Date().toLocaleTimeString('pt-PT');
+    row.innerHTML = `<span class="t">${t}</span>
+      <div class="b"><div class="top"><span class="badge b-${nivel}">${nivel}</span>
+      <span class="topic">${sub}</span></div><span class="msg"></span></div>`;
+    row.querySelector('.msg').textContent = msg;
+    log.prepend(row);
+    while (log.children.length > 60) log.lastChild.remove();
+    $('logCount').textContent = log.children.length;
+  }
+
+  // ===== Botões de comando =====
+  document.querySelectorAll('.btn[data-cmd]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      ensureAudio();                       // desbloqueia áudio no 1.º clique
+      const cmd = b.dataset.cmd;
+      if (client.connected){ client.publish(T_CMD, cmd); }
+      if (cmd === 'SILENCIAR' || cmd === 'DESARMAR') clearAlarm();
+      addLog('comando', 'INFO', '→ ' + cmd + (client.connected ? '' : ' (sem ligação)'));
+    });
+  });
+</script>
+</body>
+</html>
