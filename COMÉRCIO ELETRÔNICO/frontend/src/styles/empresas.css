@@ -1,0 +1,58 @@
+.empresas h2 { margin: 44px 0 16px; font-size: 28px; }
+/* Sem bloco de topo: a primeira secção começa encostada ao início da página. */
+.empresas > :first-child h2 { margin-top: 0; }
+
+.duas-colunas { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: start; }
+.escaloes { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.escaloes li { display: grid; grid-template-columns: 1fr auto; gap: 2px 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--linha); }
+.escalao-qtd { font-weight: 700; }
+.escaloes b { font: 800 22px var(--fonte-titulo); color: var(--laranja-escuro); text-align: right; }
+.escaloes small { grid-column: 1 / -1; color: var(--suave); }
+
+.form-cotacao { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-cotacao label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--suave); }
+.form-cotacao .larga, .form-cotacao .preco-referencia { grid-column: 1 / -1; }
+.preco-referencia { margin: 0; padding: 10px 14px; border-left: 4px solid var(--laranja); border-radius: 8px; background: var(--laranja-claro); color: var(--preto); }
+.preco-referencia small { color: var(--suave); }
+.cotacao-enviada { padding: 16px 18px; border-left: 4px solid var(--verde); border-radius: 8px; background: #f1f8f4; }
+.cotacao-enviada p { margin: 4px 0 8px; }
+
+.lista-cotacoes { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.lista-cotacoes li { padding: 18px 0; border-bottom: 1px solid var(--linha); }
+.cotacao-topo { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.cotacao-topo b { display: block; font-family: var(--fonte-titulo); }
+.cotacao-topo small { display: block; color: var(--suave); }
+.estado { padding: 4px 12px; border-radius: 99px; background: var(--cinza); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.estado-analise { background: #fdf3d6; color: #7a5a10; }
+.estado-proposta { background: #e8f3ec; color: #206040; }
+.estado-aceite { background: #dff0e6; color: #206040; }
+.mensagem-cliente { margin: 8px 0 0; padding-left: 12px; border-left: 3px solid var(--linha); color: var(--suave); font-size: 14px; }
+.proposta { margin-top: 12px; padding: 14px 16px; border-left: 4px solid var(--laranja); border-radius: 8px; background: var(--cinza); }
+.proposta p { margin: 0 0 10px; }
+.proposta .botoes { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.proposta textarea { margin-bottom: 8px; }
+.demo-resposta { margin-top: 10px; font-size: 13px; }
+/* Cotações via API: pesquisa de produtos, linhas do pedido e itens da proposta */
+.resultados-cotacao { display: grid; gap: 4px; margin: 0; padding: 8px 12px; list-style: none; border: 1px solid var(--linha); }
+.linha-cotacao { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; margin: 0; padding: 12px; border: 1px solid var(--linha); }
+.linha-cotacao legend { padding: 0 4px; font-weight: 700; }
+.linha-cotacao legend small { font-weight: 400; color: var(--suave); }
+.itens-cotacao { margin: 10px 0 0; padding-left: 18px; }
+.itens-cotacao li { margin: 4px 0; }
+.encomenda-sku { padding: 12px; border: 1px dashed var(--linha); }
+.encomenda-sku summary { cursor: pointer; font-weight: 700; }
+.encomenda-sku .botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.erros-sku { margin: 6px 0 0; padding-left: 18px; color: var(--vermelho); font-size: 13px; }
+
+@media (max-width: 900px) {
+  .linha-cotacao { grid-template-columns: 1fr; }
+  .duas-colunas { grid-template-columns: 1fr; }
+  .form-cotacao { grid-template-columns: 1fr; }
+}
+/* Pagamento da encomenda criada pela cotação */
+.pagamento-cotacao { display: grid; gap: 10px; margin-top: 10px; padding: 14px; border: 1px solid var(--linha); border-radius: 12px; background: #fff7ed; }
+.pagamento-cotacao p { margin: 0; }
+.pagamento-cotacao .botao { justify-self: start; }
+.pagamento-cotacao .bloco-pagamento { background: var(--branco); }
+.pagamento-cotacao--pago { background: #f0fdf4; border-color: #bbf7d0; }
+.pagamento-cotacao--analise { background: #fffbeb; border-color: #fde68a; }

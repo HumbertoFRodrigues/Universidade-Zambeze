@@ -1,0 +1,8 @@
+.cores { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bolinha { width: 20px; height: 20px; padding: 0; border: 2px solid var(--branco); border-radius: 50%; box-shadow: 0 0 0 1.5px #cfcfd8; transition: transform 0.15s; }
+.bolinha:hover { transform: scale(1.2); }
+.bolinha.ativa { box-shadow: 0 0 0 2.5px var(--preto); transform: scale(1.15); }
+.cores-grandes { gap: 12px; }
+.cores-grandes .bolinha { width: 36px; height: 36px; }
+.estrelas { color: #f5a400; font-size: 14px; letter-spacing: 1px; }
+.estrelas-vazias { color: #dcdce6; }

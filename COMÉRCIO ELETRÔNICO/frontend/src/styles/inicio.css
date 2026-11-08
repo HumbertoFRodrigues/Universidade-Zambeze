@@ -1,0 +1,8 @@
+.secao { padding-top: 44px; }
+.secao-topo { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.secao-topo h2 { font-size: clamp(24px, 3vw, 32px); }
+.ver-todos { color: var(--laranja-escuro); font-weight: 700; }
+.ver-todos:hover { text-decoration: underline; }
+
+/* Título só para leitores de ecrã */
+.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

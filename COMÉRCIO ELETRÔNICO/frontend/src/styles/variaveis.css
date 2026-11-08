@@ -1,0 +1,18 @@
+:root {
+    --preto: #1d1e24;
+    --carvao: #2f3138;
+    --branco: #ffffff;
+    --cinza: #f7f7f9;
+    --linha: #ececf1;
+    --suave: #6b6b78;
+    --laranja: #d97a3b;
+    --laranja-escuro: #c4672b;
+    --laranja-claro: #fbefe6;
+    --verde: #3f9a6b;
+    --vermelho: #c0443a;
+    --raio: 16px;
+    --largura: 1440px;
+    --lado: clamp(16px, 3vw, 40px);
+    --fonte-titulo: 'Sora', system-ui, sans-serif;
+    --fonte-texto: 'Plus Jakarta Sans', system-ui, sans-serif;
+}

@@ -1,0 +1,748 @@
+@font-face {
+  font-family: 'EpiLato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/lato-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'EpiLato';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/lato-latin-700-normal.woff2') format('woff2');
+}
+
+.epi-header {
+  --epi-gold: var(--laranja);
+  --epi-dark: #272727;
+  position: relative;
+  z-index: 50;
+  border-top: 2px solid #444746;
+  color: #222;
+  background: #fff;
+  font-family: 'EpiLato', Arial, sans-serif;
+  line-height: 1.4;
+}
+
+.epi-header *,
+.epi-drawer *,
+.epi-drawer-close,
+.epi-menu-toggle {
+  box-sizing: border-box;
+}
+
+.epi-container {
+  width: min(1475px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.epi-icon {
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+
+.epi-topbar {
+  min-height: 47px;
+  background: #f3f3f3;
+}
+
+.epi-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(20px, 4vw, 66px);
+  min-height: 47px;
+}
+
+.epi-topbar__inner a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #222;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.epi-topbar__inner .epi-icon {
+  color: var(--epi-gold);
+}
+
+.epi-mainbar {
+  background: #fff;
+}
+
+.epi-mainbar__inner {
+  display: grid;
+  grid-template-columns: 216px minmax(250px, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(18px, 2vw, 38px);
+  min-height: 125px;
+}
+
+.epi-logo {
+  display: block;
+  width: 216px;
+  color: var(--preto);
+}
+
+.epi-brand {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -1.4px;
+  line-height: 1;
+}
+
+.epi-brand strong {
+  color: var(--preto);
+}
+
+.epi-brand em {
+  color: var(--laranja);
+  font-style: normal;
+}
+
+.epi-search {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 53px;
+  min-width: 0;
+}
+
+.epi-search__input {
+  width: 100%;
+  min-width: 0;
+  height: 53px;
+  margin: 0;
+  padding: 0 15px;
+  border: 1px solid #dcdcdc;
+  border-right: 0;
+  border-radius: 2px 0 0 2px;
+  outline: 0;
+  background: #fff;
+  color: #333;
+  font: 17px 'EpiLato', Arial, sans-serif;
+}
+
+.epi-search__input:focus {
+  border-color: var(--epi-gold);
+}
+
+.epi-search__input::placeholder {
+  color: #777;
+  opacity: 1;
+}
+
+.epi-search__button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 123px;
+  height: 53px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--epi-gold);
+  color: #fff;
+  font: 17px 'EpiLato', Arial, sans-serif;
+}
+
+.epi-search__button:hover,
+.epi-popup__button:hover {
+  background: var(--laranja-escuro);
+}
+
+.epi-search__button .epi-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.epi-search__suggestions {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  overflow: hidden auto;
+  max-height: min(60vh, 380px);
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+}
+
+.epi-search__suggestion {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border: 0;
+  border-bottom: 1px solid #efefef;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font: 15px 'EpiLato', Arial, sans-serif;
+  text-align: left;
+}
+
+.epi-search__suggestion:hover,
+.epi-search__suggestion.is-active {
+  background: #fff7f0;
+}
+
+.epi-search__suggestion-type {
+  flex: none;
+  min-width: 72px;
+  color: var(--laranja-escuro);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.epi-search__suggestion-status {
+  margin: 0;
+  padding: 12px 14px;
+  color: #777;
+  font-size: 14px;
+}
+
+.epi-search__suggestion-all {
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  background: #f7f7f7;
+  color: var(--laranja-escuro);
+  cursor: pointer;
+  font: 700 14px 'EpiLato', Arial, sans-serif;
+  text-align: left;
+}
+
+.epi-search__suggestion-all:hover {
+  background: #fff1e6;
+}
+
+.epi-action {
+  position: relative;
+}
+
+.epi-action__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #222;
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.epi-action__link:hover .epi-action__text {
+  text-decoration: underline;
+}
+
+.epi-action__text {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.epi-user-icon {
+  width: 34px;
+  height: 37px;
+  color: #272727;
+}
+
+.epi-action--cart .epi-action__link {
+  position: relative;
+  align-items: flex-start;
+}
+
+.epi-cart-icon {
+  width: 45px;
+  height: 40px;
+  margin: 2px 0 0;
+  color: #272727;
+}
+
+.epi-cart-badge {
+  position: absolute;
+  top: -5px;
+  left: 26px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--epi-gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.epi-popup {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 17px);
+  display: none;
+  width: 280px;
+  padding: 20px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 14%);
+  color: #333;
+}
+
+.epi-popup::before,
+.epi-popup::after {
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border: solid transparent;
+  content: '';
+  transform: translateX(-50%);
+}
+
+.epi-popup::before {
+  top: -10px;
+  border-width: 0 9px 9px;
+  border-bottom-color: #dcdcdc;
+}
+
+.epi-popup::after {
+  top: -9px;
+  border-width: 0 9px 9px;
+  border-bottom-color: #fff;
+}
+
+.epi-action.is-open .epi-popup,
+.epi-action:focus-within .epi-popup {
+  display: block;
+}
+
+.epi-popup--account {
+  right: -50px;
+}
+
+.epi-popup--cart {
+  right: 0;
+  width: 290px;
+}
+
+.epi-popup strong {
+  font-size: 17px;
+}
+
+.epi-popup p {
+  margin: 10px 0 16px;
+  font-size: 14px;
+}
+
+.epi-popup__button,
+.epi-popup--cart > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  background: var(--epi-gold);
+  color: #fff;
+  font-size: 14px;
+}
+
+.epi-quick-links {
+  display: none;
+}
+
+.epi-catbar {
+  min-height: 58px;
+  background: var(--epi-dark);
+}
+
+.epi-catbar__inner {
+  display: flex;
+  min-height: 58px;
+}
+
+.epi-catbar__all {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 0 22px;
+  background: var(--epi-gold);
+  color: #fff;
+  font-size: 17px;
+}
+
+.epi-catbar__all .epi-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.epi-category-list {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+
+.epi-category {
+  display: flex;
+  flex: none;
+  align-items: stretch;
+}
+
+.epi-category a {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 0 clamp(5px, .65vw, 12px);
+  border-bottom: 3px solid transparent;
+  color: #fff;
+  font-size: clamp(11px, .9vw, 14px);
+  white-space: nowrap;
+}
+
+.epi-category a:hover,
+.epi-category a.is-active {
+  border-bottom-color: var(--epi-gold);
+  background: rgb(255 255 255 / 9%);
+}
+
+.epi-menu-toggle {
+  display: none;
+}
+
+.epi-drawer-backdrop,
+.epi-drawer,
+.epi-drawer-close {
+  display: none;
+}
+
+@media (min-width: 1450px) {
+  .epi-quick-links {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 13px;
+    padding-left: 12px;
+  }
+
+  .epi-quick-links a {
+    color: #fff;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .epi-quick-links a:hover,
+  .epi-quick-links a.is-active {
+    color: #f1c477;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .epi-container {
+    width: calc(100% - 32px);
+  }
+
+  .epi-topbar {
+    display: none;
+  }
+
+  .epi-catbar {
+    display: none;
+  }
+
+  .epi-mainbar__inner {
+    grid-template-columns: 34px minmax(0, 1fr) auto auto;
+    gap: 14px;
+    padding: 12px 0 14px;
+  }
+
+  .epi-menu-toggle {
+    display: flex;
+    grid-column: 1;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #272727;
+  }
+
+  .epi-menu-toggle .epi-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .epi-logo {
+    grid-column: 2;
+    width: min(160px, 100%);
+    min-width: 0;
+  }
+
+  .epi-brand {
+    font-size: 30px;
+  }
+
+  .epi-search {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    height: 40px;
+  }
+
+  .epi-search__input,
+  .epi-search__button {
+    height: 40px;
+  }
+
+  .epi-search__input {
+    font-size: 15px;
+  }
+
+  .epi-search__button {
+    min-width: 100px;
+    font-size: 14px;
+  }
+
+  .epi-action--account {
+    grid-column: 3;
+  }
+
+  .epi-action--cart {
+    grid-column: 4;
+  }
+
+  .epi-action__link {
+    gap: 7px;
+    font-size: 14px;
+  }
+
+  .epi-user-icon {
+    width: 28px;
+    height: 30px;
+  }
+
+  .epi-cart-icon {
+    width: 34px;
+    height: 30px;
+    margin: 0;
+  }
+
+  .epi-cart-badge {
+    top: -7px;
+    left: 18px;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+
+  .epi-popup {
+    display: none !important;
+  }
+
+  .epi-drawer-backdrop {
+    position: fixed;
+    z-index: 90;
+    display: block;
+    visibility: hidden;
+    background: rgb(0 0 0 / 45%);
+    opacity: 0;
+    inset: 0;
+    transition: opacity .25s, visibility .25s;
+  }
+
+  .epi-drawer-backdrop.is-on {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .epi-drawer {
+      --epi-gold: var(--laranja);
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: min(80vw, 380px);
+    overflow-y: auto;
+    padding: 20px 12px 24px;
+    transform: translateX(-100%);
+    visibility: hidden;
+    background: #fff;
+    transition: transform .25s, visibility .25s;
+  }
+
+  .epi-drawer.is-open {
+    transform: none;
+    visibility: visible;
+  }
+
+  .epi-drawer-close {
+    position: fixed;
+    z-index: 110;
+    top: 16px;
+    right: 14px;
+    display: grid;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .epi-drawer-close.is-on {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .epi-drawer-close .epi-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .epi-drawer__head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 46px;
+    padding: 0 14px;
+    background: #f2f2f2;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .epi-drawer__heading {
+    margin: 18px 12px 6px;
+    color: #777;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .epi-drawer__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .epi-drawer__list a {
+    display: flex;
+    align-items: center;
+    min-height: 43px;
+    padding: 0 13px;
+    border-bottom: 1px solid #efefef;
+    color: #404c58;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .epi-drawer__list .epi-drawer__all-products {
+    border-bottom: 0;
+    color: #777;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .epi-drawer__list a:hover {
+    color: var(--epi-gold);
+  }
+
+  html.epi-drawer-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  .epi-container {
+    width: calc(100% - 24px);
+  }
+
+  .epi-mainbar__inner {
+    grid-template-columns: 30px minmax(0, 1fr) 30px 34px;
+    column-gap: 10px;
+    padding-top: 10px;
+  }
+
+  .epi-menu-toggle {
+    width: 30px;
+  }
+
+  .epi-logo {
+    width: min(132px, 100%);
+  }
+
+  .epi-brand {
+    font-size: clamp(20px, 6vw, 26px);
+    letter-spacing: -0.8px;
+    white-space: nowrap;
+  }
+
+  .epi-action__text {
+    display: none;
+  }
+
+  .epi-action__link {
+    justify-content: center;
+  }
+
+  .epi-user-icon {
+    width: 25px;
+    height: 27px;
+  }
+
+  .epi-cart-icon {
+    width: 30px;
+    height: 27px;
+  }
+
+  .epi-cart-badge {
+    left: 17px;
+    width: 17px;
+    height: 17px;
+  }
+
+  .epi-search__button {
+    min-width: 44px;
+    padding: 0 12px;
+  }
+
+  .epi-search__button .epi-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .epi-search__button span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .epi-drawer,
+  .epi-drawer-backdrop {
+    transition: none;
+  }
+}

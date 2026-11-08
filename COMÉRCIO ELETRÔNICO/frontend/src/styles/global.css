@@ -1,0 +1,41 @@
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--branco); color: var(--preto); font-family: var(--fonte-texto); line-height: 1.55; }
+h1, h2, h3, h4, h5 { margin: 0; font-family: var(--fonte-titulo); line-height: 1.15; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--laranja); outline-offset: 2px; }
+
+main { max-width: var(--largura); min-height: 70vh; margin: 0 auto; padding: 32px var(--lado) 24px; }
+main h1 { font-size: clamp(28px, 3.6vw, 40px); margin-bottom: 18px; }
+.largura { max-width: var(--largura); margin: 0 auto; padding: 0 var(--lado); }
+
+.card { background: var(--branco); border: 1px solid var(--linha); border-radius: var(--raio); }
+/* Grelha de cartões da loja: só quando a classe é exactamente "grid". Sem esta restrição, a regra
+   (carregada depois do Tailwind) sobrepunha-se ao utilitário Tailwind "grid" em todo o painel e na
+   página inicial, impondo colunas de 260px e espaços de 20px. */
+[class="grid"] { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+/* Caixas de verificação e opções não herdam o tamanho dos campos de texto. */
+input[type="checkbox"], input[type="radio"] { width: auto; height: auto; padding: 0; }
+
+.botao { display: inline-flex; align-items: center; justify-content: center; height: 46px; padding: 0 24px; border: 0; border-radius: 12px; background: var(--preto); color: var(--branco); font-weight: 700; transition: transform 0.15s; }
+.botao:hover { transform: translateY(-2px); }
+.botao:disabled { opacity: 0.5; cursor: not-allowed; }
+.botao-laranja { background: var(--laranja); }
+.botao-laranja:hover { background: var(--laranja-escuro); }
+.botao-claro { background: var(--branco); color: var(--preto); border: 1.5px solid #cfcfd8; }
+.botao-pequeno { height: 38px; padding: 0 16px; font-size: 14px; }
+.botao.grande { height: 52px; font-size: 16px; }
+.link { padding: 0; border: 0; background: none; color: var(--preto); font-weight: 600; text-decoration: underline; }
+
+input, select, textarea { width: 100%; height: 46px; padding: 0 14px; border: 1.5px solid var(--linha); border-radius: 12px; background: var(--branco); }
+textarea { height: 90px; padding: 12px 14px; resize: vertical; }
+.erro { color: var(--vermelho); font-weight: 600; margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+*, *::before, *::after { border-radius: 0 !important; }
+
+*, *::before, *::after { border-radius: 0 !important; }

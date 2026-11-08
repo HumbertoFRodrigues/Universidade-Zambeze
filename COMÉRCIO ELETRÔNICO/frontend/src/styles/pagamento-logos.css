@@ -1,0 +1,4 @@
+.logo-pagamento { height: 48px; width: auto; padding: 4px 8px; border-radius: 10px; background: var(--branco); object-fit: contain; }
+.hm-footer__pay { gap: 10px !important; }
+.hm-footer__pay .logo-pagamento { height: 60px; max-width: 160px; padding: 4px 8px; border-radius: 10px; }
+.selo { display: inline-flex; align-items: center; height: 44px; padding: 0 14px; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 10px; background: rgba(255, 255, 255, 0.08); color: #e9e9ee; font-size: 13px; font-weight: 700; }

@@ -1,0 +1,140 @@
+.auth-page {
+  display: grid;
+  min-height: 56vh;
+  place-items: center;
+  padding: 32px 16px;
+  font-family: 'EpiLato', Arial, sans-serif;
+}
+
+.auth-page__container {
+  width: min(100%, 520px);
+}
+
+.auth-page__heading {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-page__heading h1 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 34px);
+  font-family: inherit;
+}
+
+.auth-page__heading p {
+  margin: 8px 0 0;
+  color: var(--suave);
+}
+
+.auth-page__icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  place-items: center;
+  border-radius: 0;
+  background: var(--laranja-claro);
+  color: var(--laranja-escuro);
+}
+
+.auth-page__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.auth-page__card {
+  padding: clamp(22px, 5vw, 32px);
+  border: 1px solid var(--linha);
+  border-radius: 0;
+  background: var(--branco);
+  box-shadow: 0 10px 32px rgb(29 30 36 / 7%);
+}
+
+.auth-page__card .campos {
+  gap: 14px;
+}
+
+.auth-page__card label {
+  font-weight: 700;
+}
+
+.auth-page__card .duas > div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.auth-page__card input:focus,
+.auth-page__card select:focus {
+  border-color: var(--laranja);
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--laranja-claro);
+}
+
+.auth-page__card input,
+.auth-page__card select,
+.auth-page__card .botao {
+  border-radius: 0;
+  font-family: inherit;
+}
+
+.auth-page__footer {
+  margin: 20px 0 0;
+  color: var(--suave);
+  font-size: 14px;
+  text-align: center;
+}
+
+.auth-page__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--laranja-escuro);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-page__forgot {
+  justify-self: center;
+}
+
+@media (max-width: 520px) {
+  .auth-page {
+    min-height: 0;
+    padding: 24px 0;
+  }
+}
+
+/* ---------------------------------------------------------------- Entrada e registo */
+main.pagina-entrada { max-width: none; min-height: 0; padding: 0; margin: 0; }
+.auth-ecra { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); max-width: 1180px; margin: 32px auto 48px; padding: 0 var(--lado); gap: 0; min-height: 640px; }
+.auth-ecra__foto { position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px; color: #fff; background-size: cover; background-position: center 25%; }
+.auth-ecra__foto strong { display: block; font: 800 clamp(28px, 2.6vw, 40px)/1.05 var(--fonte-titulo); margin-bottom: 12px; }
+.auth-ecra__foto span { display: block; max-width: 440px; font-size: 16px; opacity: 0.92; }
+.auth-ecra__foto ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 22px 0 0; padding: 0; }
+.auth-ecra__foto li { padding: 7px 12px; background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.25); font-size: 13px; font-weight: 600; backdrop-filter: blur(6px); }
+.auth-ecra__painel { display: flex; flex-direction: column; justify-content: center; padding: 40px clamp(28px, 4vw, 64px); background: #fff; border: 1px solid var(--linha); border-left: 0; }
+.auth-ecra__topo, .auth-ecra__legal { display: none; }
+.auth-ecra__conteudo { width: min(100%, 420px); margin: 0 auto; }
+.auth-ecra .auth-page__heading { text-align: left; margin-bottom: 22px; }
+.auth-ecra .auth-page__heading h1 { font: 800 clamp(28px, 2.4vw, 34px)/1.1 var(--fonte-titulo); letter-spacing: -0.02em; }
+.auth-ecra .auth-page__heading p { margin-top: 8px; }
+.auth-ecra .auth-page__card { padding: 0; border: 0; box-shadow: none; background: transparent; }
+.auth-ecra .auth-page__card input, .auth-ecra .auth-page__card select { height: 48px; background: #f6f6f8; border: 1.5px solid transparent; }
+.auth-ecra .auth-page__card input:focus, .auth-ecra .auth-page__card select:focus { background: #fff; border-color: var(--laranja); box-shadow: 0 0 0 4px var(--laranja-claro); }
+.auth-ecra .auth-page__card .botao { height: 50px; background: var(--laranja); box-shadow: 0 10px 24px rgba(217, 122, 59, 0.3); }
+.auth-ecra .auth-page__card .botao:hover { background: var(--laranja-escuro); }
+.auth-ecra .auth-page__footer { text-align: left; }
+.auth-ecra__legal a:hover, .auth-ecra__voltar:hover { color: var(--laranja); }
+@media (max-width: 900px) {
+  .so-desktop { display: none; }
+  .auth-ecra { grid-template-columns: minmax(0, 1fr); margin: 0; padding: 0; min-height: 100dvh; }
+  .auth-ecra__foto { display: none; }
+  .auth-ecra__painel { border: 0; padding: 18px 20px 20px; justify-content: space-between; }
+  .auth-ecra__topo { display: flex; justify-content: space-between; align-items: center; }
+  .auth-ecra__logo-movel .aiz-logo { font-size: 20px; }
+  .auth-ecra__voltar { font-size: 14px; font-weight: 600; color: var(--suave); }
+  .auth-ecra__conteudo { padding: 28px 0; }
+  .auth-ecra__legal { display: block; margin: 0; font-size: 12px; color: var(--suave); text-align: center; }
+}

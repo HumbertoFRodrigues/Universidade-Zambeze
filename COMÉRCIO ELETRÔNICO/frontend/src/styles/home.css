@@ -1,0 +1,297 @@
+/* ===== Homepage ===== */
+:root{--gold:var(--laranja)}
+
+.hm-container{width:min(1475px,calc(100% - 32px));margin:0 auto;padding:0}
+.pagina-inicial{max-width:none;min-height:0;margin:0;padding:0}
+.hm-section__more{margin:24px 0 0;text-align:center}
+
+.hm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ----- Ícones ----- */
+.hm-ico{display:block;flex:none;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.hm-ico--sm{width:16px;height:16px;stroke-width:2}
+.hm-ico--cat{width:40px;height:40px;color:var(--gold)}
+.hm-ico--tile{width:72px;height:72px;color:#c8c8c8;stroke-width:1.25}
+.hm-ico--sector{width:40px;height:40px;color:var(--gold)}
+.hm-ico--adv{width:28px;height:28px;color:var(--gold)}
+.hm-ico--social{width:22px;height:22px}
+
+/* ----- Botões ----- */
+.hm-btn{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 28px;border:2px solid transparent;border-radius:2px;font-size:16px;font-weight:700;line-height:1;text-align:center;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.hm-btn--sm{height:40px;padding:0 20px;font-size:14px}
+.hm-btn--gold{background:var(--gold);color:#fff}
+.hm-btn--gold:hover{background:#c4871f}
+.hm-btn--ghost{border-color:#fff;color:#fff}
+.hm-btn--ghost:hover{background:#fff;color:#272727}
+.hm-btn--dark{background:#272727;color:#fff}
+.hm-btn--dark:hover{background:#000}
+.hm-btn:focus-visible,.hm-cat:focus-visible,.hm-card a:focus-visible{outline:3px solid #272727;outline-offset:2px}
+
+/* ----- Secções ----- */
+.hm-section{padding:64px 0}
+.hm-section--grey{background:#f6f6f6}
+.hm-section--dark{background:#272727;color:#fff}
+.hm-head{margin-bottom:32px;background:transparent;border-bottom:0}
+.hm-head h2{position:relative;margin:0;padding-bottom:14px;font-size:28px;font-weight:700;line-height:1.2}
+.hm-head h2::after{content:"";position:absolute;left:0;bottom:0;width:48px;height:3px;background:var(--gold)}
+.hm-head p{margin:10px 0 0;font-size:16px;color:#666}
+.hm-eyebrow{display:inline-block;margin-bottom:14px;font-size:14px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold)}
+
+/* ----- 1. Hero ----- */
+.hm-hero{position:relative;display:flex;align-items:center;min-height:460px;overflow:hidden;background:linear-gradient(120deg,#272727 0%,#3b3b3b 100%);color:#fff}
+.hm-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hm-hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(39,39,39,.95) 0%,rgba(39,39,39,.8) 42%,rgba(39,39,39,.25) 100%)}
+.hm-hero__inner{position:relative;z-index:2;padding-top:56px;padding-bottom:56px}
+.hm-hero h1{max-width:640px;margin:0 0 16px;font-size:52px;font-weight:700;line-height:1.08}
+.hm-hero p{max-width:520px;margin:0 0 32px;font-size:20px;line-height:1.45;color:#e8e8e8}
+.hm-hero__cta{display:flex;flex-wrap:wrap;gap:12px}
+
+/* ----- 2. Categorias ----- */
+.hm-cats{--hm-visiveis:6;--hm-gap:24px;display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--hm-visiveis) - 1) * var(--hm-gap)) / var(--hm-visiveis));gap:var(--hm-gap);overflow:hidden;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 2px 12px;scrollbar-width:none;touch-action:pan-y}
+.hm-cats::-webkit-scrollbar{display:none}
+.hm-cats .hm-cat__img{-webkit-user-drag:none;user-select:none}
+.hm-cats>li{min-width:0;scroll-snap-align:start}
+.hm-cat{display:flex;flex-direction:column;align-items:center;gap:14px;height:100%;text-align:center;font-size:15px;font-weight:700;line-height:1.25;color:#272727}
+/* O global.css anula border-radius; o círculo é feito com clip-path. */
+.hm-cat__img{display:block;width:100%;max-width:176px;aspect-ratio:1;object-fit:cover;clip-path:circle(50%);background:#f3f3f3;transition:transform .2s,filter .2s}
+.hm-cat__nome{max-width:176px;transition:color .15s}
+.hm-cat:hover .hm-cat__img{transform:scale(1.04);filter:brightness(1.05)}
+.hm-cat:hover .hm-cat__nome{color:var(--gold)}
+.hm-cat:focus-visible{outline-offset:4px}
+.hm-media-vazia{display:flex;align-items:center;justify-content:center}
+
+/* ----- 3/4. Cartões de produto ----- */
+.hm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+/* Grelhas com o ProductCard do catálogo: destaques (5) e ofertas (4). */
+.hm-grid--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.hm-grid--4 > li{display:flex;min-width:0}
+.hm-grid--4 .cartao{flex:1;min-width:0}
+.hm-card{display:flex;flex-direction:column;height:100%;border:1px solid #e6e6e6;border-radius:2px;background:#fff;overflow:hidden;transition:box-shadow .15s}
+.hm-card:hover{box-shadow:0 8px 22px rgba(0,0,0,.1)}
+.hm-card__media{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:#f3f3f3}
+.hm-card__media img{width:100%;height:100%;object-fit:contain}
+.hm-badge{position:absolute;left:12px;top:12px;padding:5px 10px;border-radius:2px;background:var(--gold);color:#fff;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.hm-card__body{display:flex;flex:1;flex-direction:column;gap:6px;padding:16px}
+.hm-card__cat{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#8a8a8a}
+.hm-card__name{margin:0;font-size:15px;font-weight:400;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:4.05em}
+.hm-card__name a:hover{color:var(--gold)}
+.hm-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 6px;margin:6px 0 0}
+.hm-price strong{font-size:22px;font-weight:700}
+.hm-price__old{flex-basis:100%;font-size:13px;color:#8a8a8a;text-decoration:line-through}
+.hm-price__from{font-size:13px;color:#666}
+.hm-pix{margin:0 0 10px;font-size:13px;line-height:1.4;color:#555}
+.hm-card .hm-btn{margin-top:auto;width:100%}
+
+/* ----- 4. Ofertas ----- */
+.hm-offers{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+.hm-promo{display:flex;align-items:center;gap:28px;padding:40px;border-radius:2px;background:#272727;color:#fff}
+.hm-promo__num{font-size:96px;font-weight:700;line-height:1;color:var(--gold)}
+.hm-promo h3{margin:0 0 8px;font-size:24px;line-height:1.25}
+.hm-promo p{margin:0 0 20px;color:#cfcfcf}
+.hm-offers__list{display:grid;gap:20px}
+.hm-offers .hm-card{flex-direction:row}
+.hm-offers .hm-card__media{flex:0 0 190px;aspect-ratio:auto}
+
+/* ----- 5. Marcas ----- */
+.hm-brands{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.hm-brand{display:flex;height:96px;border:1px solid #e6e6e6;border-radius:2px;background:#fff;font-size:20px;font-weight:700;letter-spacing:.4px;text-align:center;color:#272727;transition:border-color .15s,box-shadow .15s}
+.hm-brand:hover{border-color:var(--gold);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.hm-brand a{display:flex;align-items:center;justify-content:center;width:100%;padding:18px 22px}
+.hm-brand a:focus-visible{outline:3px solid #272727;outline-offset:-3px}
+/* Logótipos com altura uniforme, sem deformar. */
+.hm-brand img{display:block;width:auto;max-width:100%;height:auto;max-height:52px;object-fit:contain}
+
+/* ----- 6. Setores ----- */
+/* Carrossel horizontal: 5 cards visíveis; o scroll fica limitado à própria lista. */
+.hm-head--accoes{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.hm-carrossel__botoes{display:flex;flex:none;gap:8px}
+.hm-carrossel__botoes button{display:grid;place-items:center;width:44px;height:44px;border:1px solid #d8d8d8;background:#fff;color:#272727;font-size:26px;line-height:1;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.hm-carrossel__botoes button:hover:not(:disabled){border-color:var(--gold);background:var(--gold);color:#fff}
+.hm-carrossel__botoes button:disabled{opacity:.35;cursor:default}
+.hm-carrossel__botoes button:focus-visible{outline:3px solid #272727;outline-offset:2px}
+.hm-sectors{--hm-visiveis:5;--hm-gap:20px;display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--hm-visiveis) - 1) * var(--hm-gap)) / var(--hm-visiveis));gap:var(--hm-gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:4px;scrollbar-width:none;-ms-overflow-style:none}
+/* Scroll horizontal mantém-se (setas, toque, trackpad, teclado); só a barra fica escondida. */
+.hm-sectors::-webkit-scrollbar{display:none}
+.hm-sectors:focus-visible{outline:3px solid #272727;outline-offset:4px}
+.hm-sector{display:flex;flex-direction:column;min-width:0;border:1px solid #e6e6e6;border-radius:2px;background:#fff;scroll-snap-align:start;overflow:hidden}
+.hm-sector__media{display:block;aspect-ratio:4/3;overflow:hidden;background:#f3f3f3}
+.hm-sector__img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .25s}
+.hm-sector:hover .hm-sector__img{transform:scale(1.04)}
+.hm-sector__body{display:flex;flex:1;flex-direction:column;padding:18px 20px 16px}
+.hm-sector h3{margin:0 0 10px;font-size:18px;line-height:1.25}
+.hm-sector h3 a:hover{color:var(--gold)}
+.hm-creditos{margin:14px 0 0;font-size:11px;line-height:1.5;color:#8a8a8a}
+.hm-creditos a{text-decoration:underline;text-underline-offset:2px}
+.hm-sector__links a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #eee;font-size:14px;transition:color .15s}
+.hm-sector__links a:hover{color:var(--gold)}
+.hm-sector__links .hm-ico{color:var(--gold)}
+
+/* ----- 7. Empresas ----- */
+.hm-biz{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hm-biz__media{min-height:380px;border-radius:2px;background:#3a3a3a;overflow:hidden}
+.hm-biz__media img{display:block;width:100%;height:100%;min-height:380px;object-fit:cover}
+.hm-biz h2{margin:0 0 14px;font-size:36px;line-height:1.15}
+.hm-biz p{margin:0 0 20px;font-size:17px;line-height:1.5;color:#e0e0e0}
+.hm-biz__list{display:grid;gap:12px;margin:0 0 28px}
+.hm-biz__list li{display:flex;align-items:center;gap:12px;font-size:16px}
+.hm-biz__list .hm-ico{color:var(--gold)}
+
+/* ----- 8. Vantagens ----- */
+.hm-advs{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 28px}
+.hm-adv{display:flex;align-items:flex-start;gap:16px}
+.hm-adv .hm-ico{box-sizing:content-box;padding:14px;border-radius:50%;background:#fbf3e4}
+.hm-adv h3{margin:2px 0 4px;font-size:18px;line-height:1.3}
+.hm-adv h3 a:hover{color:var(--gold)}
+.hm-adv p{margin:0;font-size:14px;line-height:1.45;color:#666}
+
+/* ----- 9. Newsletter ----- */
+.hm-news{padding:48px 0;background:var(--gold);color:#272727}
+.hm-news__inner{display:grid;grid-template-columns:1fr 1.3fr;gap:32px;align-items:center}
+.hm-news h2{margin:0 0 6px;font-size:30px;line-height:1.15}
+.hm-news p{margin:0;font-size:17px}
+.hm-news__form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px}
+.hm-news__form input{height:48px;padding:0 14px;border:2px solid transparent;border-radius:2px;background:#fff;font:inherit;font-size:15px;color:#272727}
+.hm-news__form input:focus{outline:0;border-color:#272727}
+.hm-news__form input[aria-invalid="true"]{border-color:#b3261e}
+.hm-news__msg,.hm-news__legal{grid-column:1/-1;margin:0;font-size:14px}
+.hm-news__msg:empty{display:none}
+.hm-news__msg{font-weight:700}
+.hm-news__legal a{text-decoration:underline}
+
+/* ----- 10. Footer ----- */
+.hm-footer{margin-top:0;padding:0;background:#272727;color:#d0d0d0;font-size:15px}
+.hm-footer ul{margin:0;padding:0;list-style:none}
+.hm-footer__grid{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;gap:40px;padding-top:56px;padding-bottom:48px}
+.hm-footer h3{margin:0 0 16px;font-size:16px;font-weight:700;color:#fff}
+.hm-footer__h-gap{margin-top:28px!important}
+.hm-footer a:hover{color:var(--gold)}
+.hm-footer li+li{margin-top:10px}
+.hm-footer__about p{margin:18px 0 0;line-height:1.6}
+.hm-footer__brand{display:inline-flex;align-items:baseline;color:#fff;font-size:28px;font-weight:700;letter-spacing:-1px;line-height:1}
+.hm-footer__brand strong{color:#fff}
+.hm-footer__brand em{color:var(--gold);font-style:normal}
+.hm-footer__contact-link{display:inline-block;margin-top:14px}
+.hm-footer__logo{display:inline-block;padding:10px 14px;border-radius:2px;background:#fff}
+.hm-footer__logo img{display:block;width:150px;height:auto}
+.hm-footer__contact li{display:flex;align-items:flex-start;gap:10px;line-height:1.4}
+.hm-footer__contact .hm-ico{margin-top:2px;color:var(--gold)}
+.hm-footer__social{display:flex;gap:10px}
+.hm-footer__social li+li{margin-top:0}
+.hm-footer__social a{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #4a4a4a;border-radius:50%;color:#fff;transition:border-color .15s,color .15s}
+.hm-footer__social a:hover{border-color:var(--gold)}
+.hm-footer__pay{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.hm-footer__pay img{max-width:100%;height:34px;padding:5px 8px;border-radius:2px;background:#fff}
+.hm-footer__seal{display:inline-flex;align-items:center;gap:8px}
+.hm-footer__bottom{background:#1d1d1d;padding:22px 0 14px;font-size:13px;line-height:1.6}
+.hm-footer__bottom-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.hm-footer__bottom p{margin:0}
+.hm-footer__partners{display:flex;align-items:center;gap:12px}
+.hm-footer__partners a{display:flex;align-items:center;padding:6px 10px;border-radius:2px;background:#fff;color:#272727}
+.hm-footer__partners img{display:block;height:28px;width:auto}
+.hm-footer__bottom .hm-footer__credit{margin-top:14px;font-size:12px;text-align:center;color:#8a8a8a}
+
+/* ===== Responsivo ===== */
+@media (max-width:1199.98px){
+  .hm-container{padding:0 24px}
+  .hm-grid{grid-template-columns:repeat(3,1fr)}
+  .hm-grid--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hm-sectors{--hm-visiveis:4}
+  .hm-advs{grid-template-columns:repeat(2,1fr)}
+  .hm-footer__grid{grid-template-columns:1fr 1fr}
+  .hm-offers{grid-template-columns:1fr}
+  .hm-news__inner{grid-template-columns:1fr}
+}
+@media (max-width:1023.98px){
+  .hm-cats{--hm-visiveis:4}
+  .hm-grid--4{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hm-sectors{--hm-visiveis:3}
+}
+@media (max-width:767.98px){
+  .hm-container{padding:0 16px}
+  .hm-section{padding:44px 0}
+  .hm-head{margin-bottom:24px}
+  .hm-head h2{font-size:24px}
+  .hm-hero{min-height:400px}
+  .hm-hero h1{font-size:34px}
+  .hm-hero p{font-size:17px}
+  .hm-hero__cta .hm-btn{flex:1 1 100%}
+  .hm-cats{--hm-visiveis:1.6;--hm-gap:12px}
+  .hm-cat{gap:10px;font-size:13px}
+  .hm-ico--cat{width:32px;height:32px}
+  .hm-grid,.hm-grid--4{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .hm-card__body{padding:12px}
+  .hm-card__name{font-size:14px}
+  .hm-price strong{font-size:18px}
+  .hm-ico--tile{width:56px;height:56px}
+  .hm-promo{flex-direction:column;align-items:flex-start;gap:12px;padding:28px 24px}
+  .hm-promo__num{font-size:72px}
+  .hm-offers .hm-card{flex-direction:column}
+  .hm-offers .hm-card__media{flex:none;aspect-ratio:4/3}
+  .hm-brands{grid-template-columns:repeat(2,1fr)}
+  .hm-brand{height:80px}
+  .hm-brand img{max-height:40px}
+  /* Em ecrãs de toque, mostra parte do card seguinte para indicar que há mais conteúdo. */
+  .hm-sectors{--hm-visiveis:1.6;--hm-gap:12px}
+  .hm-head--accoes{align-items:flex-start}
+  .hm-biz{grid-template-columns:1fr;gap:28px}
+  .hm-biz__media,.hm-biz__media img{min-height:240px}
+  .hm-biz h2{font-size:28px}
+  .hm-biz .hm-hero__cta .hm-btn{flex:1 1 100%}
+  .hm-advs{grid-template-columns:1fr}
+  .hm-news__form{grid-template-columns:1fr}
+  .hm-footer__grid{grid-template-columns:1fr;gap:32px;padding-top:40px}
+  .hm-footer__bottom-in{flex-direction:column;align-items:flex-start}
+}
+@media (max-width:420px){
+  .hm-grid--4{grid-template-columns:1fr}
+  .hm-sectors{--hm-visiveis:1.25}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hm-cat,.hm-btn,.hm-card,.hm-cat__img,.hm-sector__img{transition:none}.hm-sectors{scroll-behavior:auto}}
+
+/* ----- Página inicial: secções profissionais ----- */
+.hm-btn--contorno{border-color:#272727;color:#272727;background:transparent}
+.hm-btn--contorno:hover{background:#272727;color:#fff}
+.hm-btn--claro{background:#fff;color:#272727}
+.hm-btn--claro:hover{background:#272727;color:#fff}
+.hm-hero__confianca{display:grid;grid-template-columns:repeat(2,minmax(0,max-content));gap:10px 28px;margin:32px 0 0;padding:0;list-style:none;font-size:15px;color:#f0f0f0}
+.hm-hero__confianca li{display:flex;align-items:center;gap:10px}
+.hm-hero__confianca span{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#fff;font-size:12px;font-weight:800}
+
+.hm-cats--grelha{display:grid;grid-auto-flow:row;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;overflow:visible;padding:0}
+.hm-cat--cartao{gap:12px;padding:20px 16px;border:1px solid #ececec;border-radius:12px;background:#fff;transition:border-color .15s,box-shadow .15s,transform .15s}
+.hm-cat--cartao:hover{border-color:var(--gold);box-shadow:0 10px 24px rgba(0,0,0,.08);transform:translateY(-2px)}
+.hm-cat--cartao .hm-cat__img{max-width:132px}
+.hm-cat--cartao small{font-size:12.5px;font-weight:600;color:#7a7a7a}
+
+.hm-faixa-promo{display:flex;align-items:center;gap:16px;margin-bottom:36px;padding:18px 22px;border-radius:12px;background:linear-gradient(90deg,#272727 0%,#3a2a1f 100%);color:#fff;font-size:15px;line-height:1.45}
+.hm-faixa-promo b{color:#fff}
+.hm-faixa-promo__selo{flex:none;padding:6px 12px;border-radius:99px;background:var(--gold);font-size:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.hm-faixa-promo__ir{flex:none;margin-left:auto;font-weight:700;color:var(--gold);white-space:nowrap}
+.hm-faixa-promo:hover .hm-faixa-promo__ir{text-decoration:underline}
+
+.hm-pagamentos{padding:36px 0;border-top:1px solid #ececec;background:#fff}
+.hm-pagamentos__inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
+.hm-pagamentos h2{margin:0 0 6px;font-size:24px}
+.hm-pagamentos p{margin:0;max-width:520px;color:#666}
+.hm-pagamentos__logos{display:flex;flex-wrap:wrap;gap:14px;margin:0;padding:0;list-style:none}
+.hm-pagamentos__logos li{display:grid;place-items:center;height:84px;min-width:96px;padding:8px 14px;border:1px solid #ececec;border-radius:12px;background:#fff}
+.hm-pagamentos__logos .logo-pagamento{height:64px;max-width:170px;padding:0}
+
+.hm-contacto__accoes{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}
+details.hm-creditos summary{cursor:pointer;font-weight:600}
+
+@media (max-width:1023.98px){
+  .hm-cats--grelha{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:767.98px){
+  .hm-hero__confianca{grid-template-columns:1fr;margin-top:24px;font-size:14px}
+  .hm-cats--grelha{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .hm-cat--cartao{padding:14px 10px}
+  .hm-cat--cartao .hm-cat__img{max-width:96px}
+  .hm-faixa-promo{flex-wrap:wrap;gap:10px;padding:16px}
+  .hm-faixa-promo__ir{margin-left:0}
+  .hm-pagamentos__logos li{height:72px;min-width:80px}
+  .hm-pagamentos__logos .logo-pagamento{height:52px}
+  .hm-contacto__accoes{justify-content:stretch}
+  .hm-contacto__accoes .hm-btn{flex:1 1 100%}
+}

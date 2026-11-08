@@ -1,0 +1,113 @@
+.conta { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; min-height: 520px; padding: 12px 0; }
+.conta-lado h1 { margin: 18px 0 10px; font-size: clamp(28px, 3.2vw, 40px); }
+.vantagens-conta { display: grid; gap: 10px; margin: 6px 0 0; padding: 0; list-style: none; }
+.vantagens-conta li { display: flex; align-items: center; gap: 10px; color: #3b3b48; }
+.vantagens-conta li::before { content: '✓'; display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--laranja-claro); color: var(--laranja-escuro); font-size: 13px; font-weight: 800; }
+.conta-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.suave { margin: 0 0 4px; color: var(--suave); }
+
+.conta-form { width: 100%; max-width: 460px; }
+.campos { display: grid; gap: 12px; }
+.campos h2 { margin-bottom: 4px; font-size: 26px; }
+.campos h3 { margin-top: 8px; font-size: 16px; }
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sucesso { margin: 0; padding: 10px 14px; border-left: 4px solid var(--verde); border-radius: 8px; background: #e8f3ec; color: #206040; }
+.nota { margin: 0; color: var(--suave); font-size: 13px; }
+
+.forca { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: -4px 0 0; }
+.forca i { height: 5px; border-radius: 99px; background: var(--linha); }
+.forca-1 i:nth-child(-n+1) { background: var(--vermelho); }
+.forca-2 i:nth-child(-n+2) { background: var(--laranja); }
+.forca-3 i:nth-child(-n+3), .forca-4 i { background: var(--verde); }
+
+.moradas { display: grid; gap: 8px; margin: 12px 0 18px; padding: 0; list-style: none; }
+.moradas li { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--linha); }
+.moradas b { display: block; }
+
+.conta--perfil { align-items: start; }
+@media (max-width: 860px) { .conta { grid-template-columns: 1fr; gap: 28px; } .duas { grid-template-columns: 1fr; } }
+/* Área do cliente */
+/* Mesma largura e margens laterais do cabeçalho (.epi-container), só nas páginas /conta */
+main.pagina-conta { max-width: none; padding-left: 0; padding-right: 0; }
+.conta-area { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px; align-items: start; width: min(1475px, calc(100% - 40px)); margin: 0 auto; padding: 12px 0; }
+.conta-menu { display: grid; grid-template-areas: "perfil" "nav" "accoes"; gap: 18px; min-width: 0; padding: 22px; border: 1px solid var(--linha); background: var(--cinza); }
+.conta-menu__perfil { grid-area: perfil; display: flex; gap: 12px; align-items: center; min-width: 0; }
+.conta-menu__inicial { display: grid; place-items: center; flex: none; width: 44px; height: 44px; background: var(--laranja-claro); color: var(--laranja-escuro); font-family: var(--fonte-titulo); font-size: 18px; font-weight: 800; }
+.conta-menu__identidade { min-width: 0; }
+.conta-menu__ola { margin: 0; overflow: hidden; font-family: var(--fonte-titulo); font-size: 18px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.conta-menu__email { margin: 2px 0 0; overflow: hidden; color: var(--suave); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.conta-menu__nav { grid-area: nav; display: grid; gap: 2px; min-width: 0; }
+.conta-menu__link { padding: 10px 12px; border-left: 3px solid transparent; color: #3b3b48; font-weight: 600; white-space: nowrap; }
+.conta-menu__link:hover { background: var(--branco); }
+.conta-menu__link.active { border-left-color: var(--laranja); background: var(--branco); color: var(--preto); }
+.conta-menu__accoes { grid-area: accoes; display: grid; gap: 8px; }
+.conta-menu__accoes .botao { width: 100%; white-space: nowrap; }
+.conta-conteudo { display: grid; gap: 24px; min-width: 0; }
+.conta-cabecalho { display: grid; gap: 6px; min-width: 0; }
+.conta-cabecalho h1 { margin: 0; overflow-wrap: anywhere; font-size: clamp(24px, 3.2vw, 36px); }
+.conta-cabecalho__linha { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.conta-voltar { justify-self: start; color: var(--suave); font-size: 14px; font-weight: 600; }
+.conta-voltar:hover { color: var(--preto); }
+.conta-bloco { display: grid; gap: 14px; min-width: 0; padding: 24px; border: 1px solid var(--linha); }
+.conta-bloco h2 { font-size: 20px; }
+.conta-dados { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 16px 24px; margin: 0; }
+.conta-dados--perfil { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.conta-dados dt { color: var(--suave); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.conta-dados dd { margin: 2px 0 0; overflow-wrap: anywhere; font-weight: 600; }
+.conta-aviso { display: grid; gap: 6px; padding: 16px 18px; border-left: 4px solid var(--laranja); background: var(--laranja-claro); }
+.conta-aviso p { margin: 0; color: #3b3b48; }
+.conta-aviso .conta-links { margin-top: 8px; }
+.conta-estado { display: inline-flex; align-items: center; padding: 4px 10px; background: var(--cinza); border: 1px solid var(--linha); font-size: 13px; font-weight: 700; }
+.conta-estado--CONCLUIDA, .conta-estado--ENTREGUE { background: #e8f3ec; border-color: #c5e3d2; color: #206040; }
+.conta-estado--CANCELADA, .conta-estado--NAO_ENTREGUE { background: #fbeceb; border-color: #f1c9c5; color: var(--vermelho); }
+.conta-estado--EM_PROCESSAMENTO, .conta-estado--EM_TRANSPORTE { background: var(--laranja-claro); border-color: #f2d3bd; color: var(--laranja-escuro); }
+.conta-campo { display: grid; gap: 6px; min-width: 0; }
+.conta-campo label { font-weight: 600; font-size: 14px; }
+.conta-campo .erro { font-size: 13px; }
+.conta-form-linha { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.conta-form-linha .conta-campo { flex: 1 1 220px; }
+.conta-grupo { display: grid; gap: 12px; }
+.conta-grupo h2 { font-size: 18px; }
+.conta-atalhos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.conta-atalho { display: grid; gap: 4px; height: 100%; padding: 16px 18px; border: 1px solid var(--linha); transition: border-color 0.15s, background 0.15s; }
+.conta-atalho:hover { border-color: var(--laranja); background: var(--laranja-claro); }
+.conta-atalho span { color: var(--suave); font-size: 14px; }
+
+@media (min-width: 861px) and (min-height: 820px) { .conta-menu { position: sticky; top: 24px; } }
+
+/* Tablet: menu mais estreito */
+@media (max-width: 1100px) {
+  .conta-area { grid-template-columns: 220px minmax(0, 1fr); gap: 28px; }
+  .conta-menu { padding: 18px; }
+  .conta-dados--perfil { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1199.98px) {
+  .conta-area { width: calc(100% - 32px); }
+}
+
+/* Tablet pequeno e telemóvel: cartão compacto no topo e menu em separadores */
+@media (max-width: 860px) {
+  .conta-area { grid-template-columns: 1fr; gap: 20px; padding-top: 0; }
+  .conta-menu { position: static; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "perfil accoes" "nav nav"; gap: 14px 16px; align-items: center; padding: 16px 16px 0; }
+  .conta-menu__accoes { grid-auto-flow: column; }
+  .conta-menu__accoes .botao { width: auto; }
+  .conta-menu__nav { display: flex; gap: 0; margin: 0 -16px; padding: 0 8px; overflow-x: auto; border-top: 1px solid var(--linha); scrollbar-width: none; }
+  .conta-menu__nav::-webkit-scrollbar { display: none; }
+  .conta-menu__link { flex: none; padding: 12px; border-left: 0; border-bottom: 3px solid transparent; }
+  .conta-menu__link:hover { background: transparent; color: var(--preto); }
+  .conta-menu__link.active { border-bottom-color: var(--laranja); background: transparent; }
+  .conta-bloco { padding: 18px; }
+}
+
+@media (max-width: 560px) {
+  .conta-dados--perfil { grid-template-columns: 1fr; }
+  .conta-menu { grid-template-columns: minmax(0, 1fr); grid-template-areas: "perfil" "accoes" "nav"; }
+  .conta-menu__inicial { width: 40px; height: 40px; font-size: 16px; }
+  .conta-menu__accoes { grid-auto-flow: row; grid-template-columns: 1fr 1fr; }
+  .conta-menu__accoes .botao { width: 100%; padding: 0 12px; }
+  .conta-bloco { padding: 16px; }
+  .conta-form-linha .botao { width: 100%; }
+  .conta-cabecalho__linha .botao { width: 100%; }
+  .conta-links .botao { flex: 1 1 auto; }
+}

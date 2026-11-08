@@ -1,0 +1,29 @@
+.info { display: grid; grid-template-columns: 240px 1fr; gap: 56px; align-items: start; }
+.info-menu { position: sticky; top: 16px; display: grid; gap: 2px; }
+.info-menu h2 { margin-bottom: 8px; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--suave); }
+.info-menu a { padding: 9px 12px; border-left: 3px solid transparent; border-radius: 0 8px 8px 0; color: #3b3b48; font-weight: 600; }
+.info-menu a:hover { background: var(--cinza); }
+.info-menu a.active { border-left-color: var(--laranja); background: var(--laranja-claro); color: var(--preto); }
+
+.info-texto { max-width: 760px; }
+.info-texto h1 { margin-bottom: 20px; }
+.info-texto h3 { margin: 28px 0 10px; font-size: 20px; }
+.info-texto p, .info-texto li { color: #33333d; font-size: 16px; line-height: 1.7; }
+.info-texto p { margin: 0 0 14px; }
+.info-texto ol, .info-texto ul { display: grid; gap: 6px; margin: 0 0 14px; padding-left: 22px; }
+.info-texto h2 { margin: 30px 0 10px; font-size: 20px; }
+.info-actualizado { margin-top: 28px !important; padding-top: 14px; border-top: 1px solid var(--linha); color: var(--suave) !important; font-size: 13px !important; }
+.info-faq details { padding: 16px 0; border-bottom: 1px solid var(--linha); }
+.info-faq summary { cursor: pointer; font-weight: 700; font-size: 17px; }
+.info-faq details p { margin: 10px 0 0; }
+.por-preencher { padding: 0 3px; border-radius: 4px; background: #fdf0b8; color: #5a4a00; }
+
+.dados { display: grid; margin: 0; }
+.dados div { display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--linha); }
+.dados dt { color: var(--suave); font-weight: 600; }
+.dados dd { margin: 0; }
+
+.perguntas details { padding: 16px 0; border-bottom: 1px solid var(--linha); }
+.perguntas summary { cursor: pointer; font-weight: 700; font-size: 17px; }
+.perguntas details p { margin: 10px 0 0; }
+@media (max-width: 860px) { .info { grid-template-columns: 1fr; gap: 24px; } .info-menu { position: static; grid-template-columns: 1fr 1fr; } .info-menu h2 { grid-column: 1 / -1; } .dados div { grid-template-columns: 1fr; gap: 4px; } }

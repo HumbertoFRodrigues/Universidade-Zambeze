@@ -1,0 +1,58 @@
+.topo { background: var(--carvao); color: #d8d8e0; font-size: 13px; }
+.topo-linha { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding-top: 7px; padding-bottom: 7px; }
+
+header { background: var(--branco); border-bottom: 1px solid var(--linha); }
+.cabecalho { display: flex; align-items: center; gap: 24px; height: 76px; }
+.brand { font-family: var(--fonte-titulo); font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.brand b { color: var(--preto); }
+.brand em { color: var(--laranja); font-style: normal; }
+
+.pesquisa { display: flex; flex: 1; max-width: 640px; overflow: hidden; border: 2px solid var(--linha); border-radius: 12px; background: var(--cinza); transition: border-color 0.15s; }
+.pesquisa:focus-within { border-color: var(--laranja); background: var(--branco); }
+.pesquisa input { flex: 1; height: 44px; border: 0; border-radius: 0; background: none; outline: none; }
+.botao-pesquisa { padding: 0 22px; border: 0; background: var(--laranja); color: var(--branco); font-weight: 700; transition: background 0.15s; }
+.botao-pesquisa:hover { background: var(--laranja-escuro); }
+
+.cabecalho nav { display: flex; align-items: center; gap: 22px; margin-left: auto; font-weight: 600; }
+.cabecalho nav a.active { text-decoration: underline; text-decoration-color: var(--laranja); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.link-carrinho { display: inline-flex; align-items: center; gap: 8px; }
+.link-carrinho b { min-width: 24px; height: 24px; display: grid; place-items: center; border-radius: 99px; background: var(--laranja); color: var(--branco); font-size: 13px; }
+.link-carrinho svg { color: var(--laranja); }
+
+.linha-destaques { display: flex; gap: 6px; padding-top: 8px; padding-bottom: 8px; }
+.linha-destaques a { padding: 6px 14px; border-radius: 99px; color: #3b3b48; font-size: 14.5px; font-weight: 600; transition: background 0.15s, color 0.15s; }
+.linha-destaques a:hover, .linha-destaques a.ativa { background: var(--laranja-claro); color: var(--laranja-escuro); }
+
+.barra-categorias { background: var(--carvao); }
+.barra-links { display: flex; gap: 2px; overflow-x: auto; }
+.barra-links a { padding: 14px 16px; border-bottom: 3px solid transparent; color: #f1f1f5; font-size: 14.5px; font-weight: 600; white-space: nowrap; transition: background 0.15s; }
+.barra-links a:hover { background: rgba(255, 255, 255, 0.1); }
+.barra-links a.ativa { border-bottom-color: var(--laranja); background: rgba(255, 255, 255, 0.08); }
+
+.aviso { position: fixed; right: 16px; bottom: 16px; z-index: 30; padding: 12px 18px; border-radius: 12px; background: var(--preto); color: var(--branco); font-weight: 600; animation: sobe 0.3s; }
+@keyframes sobe { from { transform: translateY(20px); opacity: 0; } }
+
+footer { margin-top: 60px; padding: 52px 0 22px; background: var(--preto); color: #bdbdca; }
+footer h3, footer h4 { color: var(--branco); }
+footer h4 { margin-bottom: 12px; font-size: 15px; }
+footer a, footer span { display: block; padding: 3px 0; color: #bdbdca; }
+footer a:hover { color: var(--branco); }
+.rodape-grelha { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; }
+.rodape-dados { line-height: 1.8; font-size: 14.5px; }
+.rodape-linha { display: grid; grid-template-columns: 1.3fr 1.4fr 1fr; gap: 28px; margin-top: 34px; padding-top: 26px; border-top: 1px solid rgba(255, 255, 255, 0.15); }
+.etiquetas { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+footer .parceiro { display: inline-block; padding: 7px 14px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; color: #d6d6e0; font-size: 13px; font-weight: 600; }
+.redes { display: flex; gap: 10px; }
+footer .redes a { display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; color: var(--branco); font-weight: 700; }
+footer .redes a:hover { background: var(--laranja); border-color: var(--laranja); }
+.rodape-fim { margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 13px; }
+
+@media (max-width: 860px) {
+    .pesquisa { display: none; }
+    .cabecalho { height: 64px; }
+    .rodape-grelha { grid-template-columns: 1fr 1fr; }
+    .rodape-linha { grid-template-columns: 1fr; }
+}
+
+.link-conta { display: inline-flex; align-items: center; gap: 8px; }
+.link-conta svg { color: var(--laranja); }
