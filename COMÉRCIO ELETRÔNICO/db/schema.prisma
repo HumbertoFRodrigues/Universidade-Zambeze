@@ -1,0 +1,847 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Produto {
+  // Preservar os IDs de texto existentes e as FKs que os referenciam.
+  id               String             @id @default(cuid())
+  slug             String             @unique
+  nome             String             @db.VarChar(200)
+  codigo           String?            @unique @db.VarChar(50)
+  marca            String?            @db.VarChar(100)
+  descricao        String             @db.Text
+  especificacoes   Json?              @db.JsonB
+  garantia         String?            @db.Text
+  preco            Decimal            @db.Decimal(12, 2)
+  codigoMoeda      String             @default("MZN") @map("codigo_moeda") @db.VarChar(3)
+  quantidadeStock  Int                @default(0) @map("quantidade_stock")
+  limiarStockBaixo Int?               @map("limiar_stock_baixo")
+  // codigo e categoriaId opcionais durante o preenchimento dos dados existentes.
+  categoriaId      Int?               @map("categoria_id")
+  activo           Boolean            @default(true)
+  criadoEm         DateTime           @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm    DateTime           @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  categoria        Categoria?         @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  imagens          ImagemProduto[]
+  itensCarrinho    ItemCarrinho[]
+  itensEncomenda   ItemEncomenda[]
+  avaliacoes       AvaliacaoProduto[]
+  promocoes        PromocaoProduto[]
+  movimentosStock  MovimentoStock[]
+  itensCotacao     ItemCotacao[]
+
+  @@index([categoriaId])
+  @@map("produto")
+}
+
+enum PerfilUtilizador {
+  CLIENTE
+  ADMINISTRADOR
+  // Conta de empresa (B2B): não compra directamente, só através de cotações.
+  EMPRESA
+
+  @@map("perfil_utilizador")
+}
+
+enum EstadoEncomenda {
+  REGISTADA
+  EM_PROCESSAMENTO
+  CONCLUIDA
+  CANCELADA
+
+  @@map("estado_encomenda")
+}
+
+enum EstadoPagamento {
+  PENDENTE
+  CONFIRMADO
+  FALHADO
+  REEMBOLSADO
+
+  @@map("estado_pagamento")
+}
+
+enum EstadoEntrega {
+  POR_EXPEDIR
+  EM_TRANSPORTE
+  ENTREGUE
+  NAO_ENTREGUE
+
+  @@map("estado_entrega")
+}
+
+enum EstadoDevolucao {
+  SOLICITADA
+  EM_ANALISE
+  APROVADA
+  REJEITADA
+  PRODUTO_RECEBIDO
+  REEMBOLSADA
+
+  @@map("estado_devolucao")
+}
+
+enum EstadoReembolso {
+  PENDENTE
+  CONCLUIDO
+  FALHADO
+
+  @@map("estado_reembolso")
+}
+
+enum TipoDesconto {
+  PERCENTAGEM
+  FIXO
+
+  @@map("tipo_desconto")
+}
+
+enum TipoMovimento {
+  ENTRADA
+  AJUSTE
+  VENDA
+  REPOSICAO_CANCELAMENTO
+  REPOSICAO_DEVOLUCAO
+
+  @@map("tipo_movimento")
+}
+
+enum MotivoDevolucao {
+  ARREPENDIMENTO
+  DIFERENTE_DA_DESCRICAO
+  DEFEITUOSO
+  OUTRO
+
+  @@map("motivo_devolucao")
+}
+
+enum CondicaoItem {
+  PENDENTE
+  REVENDAVEL
+  NAO_REVENDAVEL
+
+  @@map("condicao_item")
+}
+
+enum TipoPedido {
+  DUVIDA
+  GARANTIA
+  RECLAMACAO
+
+  @@map("tipo_pedido")
+}
+
+enum EstadoPedido {
+  ABERTO
+  EM_CURSO
+  RESOLVIDO
+  FECHADO
+
+  @@map("estado_pedido")
+}
+
+enum TipoPolitica {
+  PRIVACIDADE
+  TERMOS
+  ENTREGA
+  DEVOLUCAO
+  GARANTIA
+
+  @@map("tipo_politica")
+}
+
+model Categoria {
+  id             Int             @id @default(autoincrement())
+  nome           String          @unique @db.VarChar(100)
+  categoriaPaiId Int?            @map("categoria_pai_id")
+  activo         Boolean         @default(true)
+  categoriaPai   Categoria?      @relation("Subcategorias", fields: [categoriaPaiId], references: [id], onDelete: Restrict)
+  subcategorias  Categoria[]     @relation("Subcategorias")
+  produtos       Produto[]
+  promocoes      Promocao[]
+  descontosGrupo DescontoGrupo[]
+
+  @@index([categoriaPaiId])
+  @@map("categoria")
+}
+
+model ImagemProduto {
+  id               Int     @id @default(autoincrement())
+  produtoId        String  @map("produto_id")
+  url              String  @db.VarChar(500)
+  textoAlternativo String? @map("texto_alternativo") @db.VarChar(200)
+  ordem            Int     @default(0)
+  principal        Boolean @default(false)
+  produto          Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@index([produtoId])
+  @@map("imagem_produto")
+}
+
+model Utilizador {
+  id                   Int                        @id @default(autoincrement())
+  nome                 String                     @db.VarChar(150)
+  // Unicidade sem distincao de maiusculas: indice SQL lower(email).
+  email                String                     @unique @db.VarChar(254)
+  telefone             String                     @db.VarChar(30)
+  hashPalavraPasse     String                     @map("hash_palavra_passe") @db.VarChar(255)
+  perfil               PerfilUtilizador           @default(CLIENTE)
+  activo               Boolean                    @default(true)
+  privacidadeAceiteEm  DateTime                   @map("privacidade_aceite_em") @db.Timestamptz(6)
+  criadoEm             DateTime                   @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm        DateTime                   @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  enderecos            Endereco[]
+  tokensRecuperacao    TokenRecuperacao[]
+  sessoes              SessaoAutenticacao[]
+  carrinho             Carrinho?
+  encomendas           Encomenda[]
+  avaliacoesProduto    AvaliacaoProduto[]         @relation("AvaliacoesProdutoAutor")
+  alteracoesEncomenda  HistoricoEstadoEncomenda[]
+  movimentosStock      MovimentoStock[]
+  pedidosAssistencia   PedidoAssistencia[]        @relation("SolicitanteAssistencia")
+  respostasAssistencia PedidoAssistencia[]        @relation("ResponsavelAssistencia")
+  decisoesDevolucao    Devolucao[]
+  reembolsos           Reembolso[]
+  politicas            PoliticaLoja[]
+  registosAuditoria    RegistoAuditoria[]
+  empresa              Empresa?                   @relation("ContaEmpresa")
+  decisoesEmpresa      Empresa[]                  @relation("DecisaoEmpresa")
+  cotacoesPedidas      Cotacao[]                  @relation("CotacaoPedida")
+  cotacoesRespondidas  Cotacao[]                  @relation("CotacaoRespondida")
+
+  @@map("utilizador")
+}
+
+model Endereco {
+  id               Int         @id @default(autoincrement())
+  utilizadorId     Int         @map("utilizador_id")
+  etiqueta         String?     @db.VarChar(50)
+  nomeDestinatario String      @map("nome_destinatario") @db.VarChar(150)
+  telefone         String      @db.VarChar(30)
+  linhaEndereco    String      @map("linha_endereco") @db.VarChar(255)
+  cidade           String      @db.VarChar(100)
+  provincia        String      @db.VarChar(100)
+  pontoReferencia  String?     @map("ponto_referencia") @db.VarChar(255)
+  zonaEntregaId    Int         @map("zona_entrega_id")
+  predefinido      Boolean     @default(false)
+  utilizador       Utilizador  @relation(fields: [utilizadorId], references: [id], onDelete: Cascade)
+  zonaEntrega      ZonaEntrega @relation(fields: [zonaEntregaId], references: [id], onDelete: Restrict)
+
+  @@index([utilizadorId])
+  @@index([zonaEntregaId])
+  @@map("endereco")
+}
+
+model TokenRecuperacao {
+  id           Int        @id @default(autoincrement())
+  utilizadorId Int        @map("utilizador_id")
+  hashToken    String     @unique @map("hash_token") @db.VarChar(255)
+  expiraEm     DateTime   @map("expira_em") @db.Timestamptz(6)
+  usadoEm      DateTime?  @map("usado_em") @db.Timestamptz(6)
+  criadoEm     DateTime   @default(now()) @map("criado_em") @db.Timestamptz(6)
+  utilizador   Utilizador @relation(fields: [utilizadorId], references: [id], onDelete: Cascade)
+
+  @@index([utilizadorId])
+  @@map("token_recuperacao")
+}
+
+model SessaoAutenticacao {
+  id           String     @id @default(cuid())
+  utilizadorId Int        @map("utilizador_id")
+  hashToken    String     @unique @map("hash_token") @db.VarChar(64)
+  expiraEm     DateTime   @map("expira_em") @db.Timestamptz(6)
+  revogadoEm   DateTime?  @map("revogado_em") @db.Timestamptz(6)
+  criadoEm     DateTime   @default(now()) @map("criado_em") @db.Timestamptz(6)
+  utilizador   Utilizador @relation(fields: [utilizadorId], references: [id], onDelete: Cascade)
+
+  @@index([utilizadorId, expiraEm])
+  @@map("sessao_autenticacao")
+}
+
+model Carrinho {
+  id            Int            @id @default(autoincrement())
+  utilizadorId  Int?           @unique @map("utilizador_id")
+  tokenSessao   String?        @unique @map("token_sessao") @db.VarChar(64)
+  criadoEm      DateTime       @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm DateTime       @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  utilizador    Utilizador?    @relation(fields: [utilizadorId], references: [id], onDelete: Cascade)
+  itens         ItemCarrinho[]
+
+  @@map("carrinho")
+}
+
+model ItemCarrinho {
+  id         Int      @id @default(autoincrement())
+  carrinhoId Int      @map("carrinho_id")
+  produtoId  String   @map("produto_id")
+  quantidade Int
+  carrinho   Carrinho @relation(fields: [carrinhoId], references: [id], onDelete: Cascade)
+  produto    Produto  @relation(fields: [produtoId], references: [id], onDelete: Restrict)
+
+  @@unique([carrinhoId, produtoId])
+  @@index([produtoId])
+  @@map("item_carrinho")
+}
+
+model Encomenda {
+  id                      Int                        @id @default(autoincrement())
+  codigoEncomenda         String                     @unique @map("codigo_encomenda") @db.VarChar(20)
+  chaveIdempotencia       String                     @unique @map("chave_idempotencia") @db.VarChar(64)
+  utilizadorId            Int?                       @map("utilizador_id")
+  estado                  EstadoEncomenda            @default(REGISTADA)
+  nomeContacto            String                     @map("nome_contacto") @db.VarChar(150)
+  emailContacto           String                     @map("email_contacto") @db.VarChar(254)
+  telefoneContacto        String                     @map("telefone_contacto") @db.VarChar(30)
+  entregaNomeDestinatario String                     @map("entrega_nome_destinatario") @db.VarChar(150)
+  entregaTelefone         String                     @map("entrega_telefone") @db.VarChar(30)
+  entregaLinhaEndereco    String                     @map("entrega_linha_endereco") @db.VarChar(255)
+  entregaCidade           String                     @map("entrega_cidade") @db.VarChar(100)
+  entregaProvincia        String                     @map("entrega_provincia") @db.VarChar(100)
+  entregaPontoReferencia  String?                    @map("entrega_ponto_referencia") @db.VarChar(255)
+  zonaEntregaId           Int                        @map("zona_entrega_id")
+  modalidadeEntregaId     Int                        @map("modalidade_entrega_id")
+  valorSubtotal           Decimal                    @map("valor_subtotal") @db.Decimal(12, 2)
+  totalDesconto           Decimal                    @default(0) @map("total_desconto") @db.Decimal(12, 2)
+  valorFrete              Decimal                    @map("valor_frete") @db.Decimal(12, 2)
+  valorTotal              Decimal                    @map("valor_total") @db.Decimal(12, 2)
+  // IVA incluído no total e dados fiscais do cliente no momento da compra
+  // (nulos nas encomendas anteriores a esta funcionalidade).
+  taxaIva                 Decimal?                   @map("taxa_iva") @db.Decimal(5, 2)
+  baseTributavel          Decimal?                   @map("base_tributavel") @db.Decimal(12, 2)
+  valorIva                Decimal?                   @map("valor_iva") @db.Decimal(12, 2)
+  facturacaoNome          String?                    @map("facturacao_nome") @db.VarChar(200)
+  facturacaoNuit          String?                    @map("facturacao_nuit") @db.VarChar(9)
+  facturacaoMorada        String?                    @map("facturacao_morada") @db.VarChar(500)
+  termosAceitesEm         DateTime                   @map("termos_aceites_em") @db.Timestamptz(6)
+  versaoTermos            Int?                       @map("versao_termos")
+  criadoEm                DateTime                   @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm           DateTime                   @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  utilizador              Utilizador?                @relation(fields: [utilizadorId], references: [id], onDelete: Restrict)
+  zonaEntrega             ZonaEntrega                @relation(fields: [zonaEntregaId], references: [id], onDelete: Restrict)
+  modalidadeEntrega       ModalidadeEntrega          @relation(fields: [modalidadeEntregaId], references: [id], onDelete: Restrict)
+  itens                   ItemEncomenda[]
+  historicoEstados        HistoricoEstadoEncomenda[]
+  pagamentos              Pagamento[]
+  entrega                 Entrega?
+  avaliacao               AvaliacaoEncomenda?
+  pedidosAssistencia      PedidoAssistencia[]
+  devolucoes              Devolucao[]
+  cotacao                 Cotacao?
+  factura                 Factura?
+
+  @@index([utilizadorId])
+  @@index([zonaEntregaId, modalidadeEntregaId])
+  @@index([modalidadeEntregaId])
+  @@index([estado, criadoEm])
+  @@map("encomenda")
+}
+
+model ItemEncomenda {
+  id                  Int               @id @default(autoincrement())
+  encomendaId         Int               @map("encomenda_id")
+  produtoId           String            @map("produto_id")
+  nomeProduto         String            @map("nome_produto") @db.VarChar(200)
+  codigoProduto       String            @map("codigo_produto") @db.VarChar(50)
+  quantidade          Int
+  precoUnitario       Decimal           @map("preco_unitario") @db.Decimal(12, 2)
+  descontoUnitario    Decimal           @default(0) @map("desconto_unitario") @db.Decimal(12, 2)
+  promocaoId          Int?              @map("promocao_id")
+  nomePromocao        String?           @map("nome_promocao") @db.VarChar(150)
+  quantidadeDevolvida Int               @default(0) @map("quantidade_devolvida")
+  encomenda           Encomenda         @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+  produto             Produto           @relation(fields: [produtoId], references: [id], onDelete: Restrict)
+  promocao            Promocao?         @relation(fields: [promocaoId], references: [id], onDelete: SetNull)
+  movimentosStock     MovimentoStock[]
+  avaliacao           AvaliacaoProduto?
+  itensDevolucao      ItemDevolucao[]
+
+  @@unique([encomendaId, produtoId])
+  @@index([produtoId])
+  @@index([promocaoId])
+  @@map("item_encomenda")
+}
+
+model HistoricoEstadoEncomenda {
+  id             Int              @id @default(autoincrement())
+  encomendaId    Int              @map("encomenda_id")
+  estadoAnterior EstadoEncomenda? @map("estado_anterior")
+  estadoNovo     EstadoEncomenda  @map("estado_novo")
+  alteradoPor    Int?             @map("alterado_por")
+  observacao     String?          @db.VarChar(255)
+  criadoEm       DateTime         @default(now()) @map("criado_em") @db.Timestamptz(6)
+  encomenda      Encomenda        @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+  autor          Utilizador?      @relation(fields: [alteradoPor], references: [id], onDelete: SetNull)
+
+  @@index([encomendaId, criadoEm])
+  @@index([alteradoPor])
+  @@map("historico_estado_encomenda")
+}
+
+model FormaPagamento {
+  id         Int         @id @default(autoincrement())
+  codigo     String      @unique @db.VarChar(30)
+  nome       String      @db.VarChar(100)
+  simulado   Boolean     @default(true)
+  activo     Boolean     @default(true)
+  pagamentos Pagamento[]
+
+  @@map("forma_pagamento")
+}
+
+model Pagamento {
+  id                 Int             @id @default(autoincrement())
+  encomendaId        Int             @map("encomenda_id")
+  formaPagamentoId   Int             @map("forma_pagamento_id")
+  referenciaOperacao String          @unique @map("referencia_operacao") @db.VarChar(64)
+  valor              Decimal         @db.Decimal(12, 2)
+  valorReembolsado   Decimal         @default(0) @map("valor_reembolsado") @db.Decimal(12, 2)
+  estado             EstadoPagamento @default(PENDENTE)
+  simulado           Boolean
+  motivoFalha        String?         @map("motivo_falha") @db.VarChar(255)
+  confirmadoEm       DateTime?       @map("confirmado_em") @db.Timestamptz(6)
+  comprovativoUrl    String?         @map("comprovativo_url") @db.VarChar(255)
+  encomenda          Encomenda       @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+  formaPagamento     FormaPagamento  @relation(fields: [formaPagamentoId], references: [id], onDelete: Restrict)
+  reembolsos         Reembolso[]
+
+  @@index([encomendaId])
+  @@index([formaPagamentoId])
+  @@map("pagamento")
+}
+
+model ZonaEntrega {
+  id         Int           @id @default(autoincrement())
+  nome       String        @unique @db.VarChar(100)
+  descricao  String?       @db.VarChar(255)
+  activo     Boolean       @default(true)
+  enderecos  Endereco[]
+  encomendas Encomenda[]
+  tarifas    TarifaFrete[]
+
+  @@map("zona_entrega")
+}
+
+model ModalidadeEntrega {
+  id               Int           @id @default(autoincrement())
+  nome             String        @unique @db.VarChar(100)
+  levantamentoLoja Boolean       @default(false) @map("levantamento_loja")
+  activo           Boolean       @default(true)
+  encomendas       Encomenda[]
+  tarifas          TarifaFrete[]
+
+  @@map("modalidade_entrega")
+}
+
+model TarifaFrete {
+  zonaEntregaId       Int               @map("zona_entrega_id")
+  modalidadeEntregaId Int               @map("modalidade_entrega_id")
+  valor               Decimal           @db.Decimal(12, 2)
+  prazoDias           Int?              @map("prazo_dias")
+  activo              Boolean           @default(true)
+  zonaEntrega         ZonaEntrega       @relation(fields: [zonaEntregaId], references: [id], onDelete: Restrict)
+  modalidadeEntrega   ModalidadeEntrega @relation(fields: [modalidadeEntregaId], references: [id], onDelete: Restrict)
+
+  @@id([zonaEntregaId, modalidadeEntregaId])
+  @@index([modalidadeEntregaId])
+  @@map("tarifa_frete")
+}
+
+model Entrega {
+  id          Int           @id @default(autoincrement())
+  encomendaId Int           @unique @map("encomenda_id")
+  estado      EstadoEntrega @default(POR_EXPEDIR)
+  expedidoEm  DateTime?     @map("expedido_em") @db.Timestamptz(6)
+  entregueEm  DateTime?     @map("entregue_em") @db.Timestamptz(6)
+  recebidoPor String?       @map("recebido_por") @db.VarChar(150)
+  observacao  String?       @db.VarChar(255)
+  encomenda   Encomenda     @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+
+  @@map("entrega")
+}
+
+model Promocao {
+  id             Int               @id @default(autoincrement())
+  nome           String            @db.VarChar(150)
+  descricao      String?           @db.VarChar(255)
+  tipoDesconto   TipoDesconto      @map("tipo_desconto")
+  valorDesconto  Decimal           @map("valor_desconto") @db.Decimal(12, 2)
+  inicioEm       DateTime          @map("inicio_em") @db.Timestamptz(6)
+  fimEm          DateTime          @map("fim_em") @db.Timestamptz(6)
+  activo         Boolean           @default(true)
+  categoriaId    Int?              @map("categoria_id")
+  categoria      Categoria?        @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  produtos       PromocaoProduto[]
+  itensEncomenda ItemEncomenda[]
+
+  @@index([categoriaId])
+  @@map("promocao")
+}
+
+model PromocaoProduto {
+  promocaoId Int      @map("promocao_id")
+  produtoId  String   @map("produto_id")
+  promocao   Promocao @relation(fields: [promocaoId], references: [id], onDelete: Cascade)
+  produto    Produto  @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@id([promocaoId, produtoId])
+  @@index([produtoId])
+  @@map("promocao_produto")
+}
+
+model MovimentoStock {
+  id                 BigInt         @id @default(autoincrement())
+  produtoId          String         @map("produto_id")
+  tipoMovimento      TipoMovimento  @map("tipo_movimento")
+  variacaoQuantidade Int            @map("variacao_quantidade")
+  stockApos          Int            @map("stock_apos")
+  itemEncomendaId    Int?           @map("item_encomenda_id")
+  itemDevolucaoId    Int?           @map("item_devolucao_id")
+  motivo             String?        @db.VarChar(255)
+  criadoPor          Int?           @map("criado_por")
+  criadoEm           DateTime       @default(now()) @map("criado_em") @db.Timestamptz(6)
+  produto            Produto        @relation(fields: [produtoId], references: [id], onDelete: Restrict)
+  itemEncomenda      ItemEncomenda? @relation(fields: [itemEncomendaId], references: [id], onDelete: Restrict)
+  itemDevolucao      ItemDevolucao? @relation(fields: [itemDevolucaoId], references: [id], onDelete: Restrict)
+  autor              Utilizador?    @relation(fields: [criadoPor], references: [id], onDelete: SetNull)
+
+  @@unique([itemEncomendaId, tipoMovimento])
+  @@unique([itemDevolucaoId, tipoMovimento])
+  @@index([produtoId, criadoEm])
+  @@index([criadoPor])
+  @@map("movimento_stock")
+}
+
+model AvaliacaoProduto {
+  id              Int             @id @default(autoincrement())
+  itemEncomendaId Int?            @unique @map("item_encomenda_id")
+  produtoId       String          @map("produto_id")
+  utilizadorId    Int?            @map("utilizador_id")
+  classificacao   Int             @db.SmallInt
+  comentario      String?         @db.Text
+  estado          EstadoAvaliacao @default(PENDENTE)
+  motivoRejeicao  String?         @map("motivo_rejeicao") @db.VarChar(255)
+  imagens         String[]        @default([])
+  moderadoEm      DateTime?       @map("moderado_em") @db.Timestamptz(6)
+  criadoEm        DateTime        @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm   DateTime        @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  itemEncomenda   ItemEncomenda?  @relation(fields: [itemEncomendaId], references: [id], onDelete: Restrict)
+  produto         Produto         @relation(fields: [produtoId], references: [id], onDelete: Restrict)
+  autor           Utilizador?     @relation("AvaliacoesProdutoAutor", fields: [utilizadorId], references: [id], onDelete: SetNull)
+
+  @@index([estado])
+  @@index([produtoId])
+  @@index([utilizadorId, produtoId])
+  @@map("avaliacao_produto")
+}
+
+enum EstadoAvaliacao {
+  PENDENTE
+  APROVADA
+  REJEITADA
+
+  @@map("estado_avaliacao")
+}
+
+model AvaliacaoEncomenda {
+  id                       Int       @id @default(autoincrement())
+  encomendaId              Int       @unique @map("encomenda_id")
+  classificacaoExperiencia Int       @map("classificacao_experiencia") @db.SmallInt
+  recomenda                Boolean
+  comentario               String?   @db.Text
+  encomenda                Encomenda @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+
+  @@map("avaliacao_encomenda")
+}
+
+model PedidoAssistencia {
+  id               Int          @id @default(autoincrement())
+  tipoPedido       TipoPedido   @map("tipo_pedido")
+  utilizadorId     Int?         @map("utilizador_id")
+  encomendaId      Int?         @map("encomenda_id")
+  nomeContacto     String       @map("nome_contacto") @db.VarChar(150)
+  emailContacto    String       @map("email_contacto") @db.VarChar(254)
+  telefoneContacto String?      @map("telefone_contacto") @db.VarChar(30)
+  assunto          String       @db.VarChar(150)
+  mensagem         String       @db.Text
+  estado           EstadoPedido @default(ABERTO)
+  resposta         String?      @db.Text
+  respondidoPor    Int?         @map("respondido_por")
+  respondidoEm     DateTime?    @map("respondido_em") @db.Timestamptz(6)
+  utilizador       Utilizador?  @relation("SolicitanteAssistencia", fields: [utilizadorId], references: [id], onDelete: SetNull)
+  responsavel      Utilizador?  @relation("ResponsavelAssistencia", fields: [respondidoPor], references: [id], onDelete: SetNull)
+  encomenda        Encomenda?   @relation(fields: [encomendaId], references: [id], onDelete: SetNull)
+
+  @@index([utilizadorId])
+  @@index([encomendaId])
+  @@index([respondidoPor])
+  @@map("pedido_assistencia")
+}
+
+model Devolucao {
+  id                  Int             @id @default(autoincrement())
+  codigoDevolucao     String          @unique @map("codigo_devolucao") @db.VarChar(20)
+  encomendaId         Int             @map("encomenda_id")
+  tipoMotivo          MotivoDevolucao @map("tipo_motivo")
+  descricaoMotivo     String?         @map("descricao_motivo") @db.Text
+  estado              EstadoDevolucao @default(SOLICITADA)
+  justificacaoDecisao String?         @map("justificacao_decisao") @db.VarChar(500)
+  decididoPor         Int?            @map("decidido_por")
+  decididoEm          DateTime?       @map("decidido_em") @db.Timestamptz(6)
+  recebidoEm          DateTime?       @map("recebido_em") @db.Timestamptz(6)
+  criadoEm            DateTime        @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm       DateTime        @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  encomenda           Encomenda       @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+  responsavel         Utilizador?     @relation(fields: [decididoPor], references: [id], onDelete: SetNull)
+  itens               ItemDevolucao[]
+  reembolso           Reembolso?
+
+  @@index([encomendaId])
+  @@index([decididoPor])
+  @@map("devolucao")
+}
+
+model ItemDevolucao {
+  id                   Int              @id @default(autoincrement())
+  devolucaoId          Int              @map("devolucao_id")
+  itemEncomendaId      Int              @map("item_encomenda_id")
+  quantidade           Int
+  resultadoVerificacao CondicaoItem     @default(PENDENTE) @map("resultado_verificacao")
+  devolucao            Devolucao        @relation(fields: [devolucaoId], references: [id], onDelete: Restrict)
+  itemEncomenda        ItemEncomenda    @relation(fields: [itemEncomendaId], references: [id], onDelete: Restrict)
+  movimentosStock      MovimentoStock[]
+
+  @@unique([devolucaoId, itemEncomendaId])
+  @@index([itemEncomendaId])
+  @@map("item_devolucao")
+}
+
+model Reembolso {
+  id                 Int             @id @default(autoincrement())
+  devolucaoId        Int?            @unique @map("devolucao_id")
+  pagamentoId        Int             @map("pagamento_id")
+  referenciaOperacao String          @unique @map("referencia_operacao") @db.VarChar(64)
+  valor              Decimal         @db.Decimal(12, 2)
+  estado             EstadoReembolso @default(PENDENTE)
+  simulado           Boolean
+  processadoPor      Int?            @map("processado_por")
+  processadoEm       DateTime?       @map("processado_em") @db.Timestamptz(6)
+  criadoEm           DateTime        @default(now()) @map("criado_em") @db.Timestamptz(6)
+  devolucao          Devolucao?      @relation(fields: [devolucaoId], references: [id], onDelete: Restrict)
+  pagamento          Pagamento       @relation(fields: [pagamentoId], references: [id], onDelete: Restrict)
+  responsavel        Utilizador?     @relation(fields: [processadoPor], references: [id], onDelete: SetNull)
+
+  @@index([pagamentoId])
+  @@index([processadoPor])
+  @@map("reembolso")
+}
+
+model ConfiguracaoLoja {
+  // CHECK id = 1 na migration garante um unico registo.
+  id                    Int      @id @default(1)
+  nomeMarca             String   @map("nome_marca") @db.VarChar(150)
+  designacaoLegal       String?  @map("designacao_legal") @db.VarChar(200)
+  sobre                 String?  @db.Text
+  morada                String?  @db.VarChar(255)
+  referenciaLocalizacao String?  @map("referencia_localizacao") @db.VarChar(255)
+  telefone              String?  @db.VarChar(30)
+  email                 String?  @db.VarChar(254)
+  horarioAtendimento    String?  @map("horario_atendimento") @db.VarChar(255)
+  codigoMoeda           String   @default("MZN") @map("codigo_moeda") @db.Char(3)
+  regrasComerciais      Json?    @map("regras_comerciais") @db.JsonB
+  // Fiscal: os preços do catálogo incluem IVA a esta taxa; NUIT do vendedor nas facturas.
+  taxaIva               Decimal  @default(16) @map("taxa_iva") @db.Decimal(5, 2)
+  nuit                  String?  @db.VarChar(9)
+  actualizadoEm         DateTime @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+
+  @@map("configuracao_loja")
+}
+
+model PoliticaLoja {
+  id             Int          @id @default(autoincrement())
+  tipoPolitica   TipoPolitica @unique @map("tipo_politica")
+  titulo         String       @db.VarChar(150)
+  conteudo       String       @db.Text
+  versao         Int          @default(1)
+  actualizadoPor Int?         @map("actualizado_por")
+  actualizadoEm  DateTime     @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  autor          Utilizador?  @relation(fields: [actualizadoPor], references: [id], onDelete: SetNull)
+
+  @@index([actualizadoPor])
+  @@map("politica_loja")
+}
+
+model RegistoAuditoria {
+  id                BigInt      @id @default(autoincrement())
+  utilizadorAutorId Int?        @map("utilizador_autor_id")
+  accao             String      @db.VarChar(60)
+  tipoEntidade      String      @map("tipo_entidade") @db.VarChar(50)
+  idEntidade        String      @map("id_entidade") @db.VarChar(50)
+  detalhes          Json?       @db.JsonB
+  criadoEm          DateTime    @default(now()) @map("criado_em") @db.Timestamptz(6)
+  autor             Utilizador? @relation(fields: [utilizadorAutorId], references: [id], onDelete: SetNull)
+
+  @@index([utilizadorAutorId])
+  @@index([tipoEntidade, idEntidade])
+  @@index([criadoEm])
+  @@map("registo_auditoria")
+}
+
+enum TipoClienteEmpresa {
+  EMPRESA
+  REVENDEDOR
+
+  @@map("tipo_cliente_empresa")
+}
+
+enum EstadoEmpresa {
+  PENDENTE
+  APROVADA
+  SUSPENSA
+
+  @@map("estado_empresa")
+}
+
+// Dados da empresa de uma conta com perfil EMPRESA (1:1). Só uma empresa APROVADA
+// pode pedir cotações; o NUIT tem 9 dígitos (CHECK empresa_nuit_valido).
+model Empresa {
+  id            Int                @id @default(autoincrement())
+  utilizadorId  Int                @unique @map("utilizador_id")
+  nome          String             @db.VarChar(200)
+  nuit          String             @unique @db.VarChar(9)
+  rua           String             @db.VarChar(255)
+  bairro        String             @db.VarChar(100)
+  cidade        String             @db.VarChar(100)
+  provincia     String             @db.VarChar(100)
+  telefone      String             @db.VarChar(30)
+  email         String             @db.VarChar(254)
+  tipoCliente   TipoClienteEmpresa @map("tipo_cliente")
+  estado        EstadoEmpresa      @default(PENDENTE)
+  motivoEstado  String?            @map("motivo_estado") @db.VarChar(500)
+  decididoPor   Int?               @map("decidido_por")
+  decididoEm    DateTime?          @map("decidido_em") @db.Timestamptz(6)
+  criadoEm      DateTime           @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm DateTime           @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  utilizador    Utilizador         @relation("ContaEmpresa", fields: [utilizadorId], references: [id], onDelete: Cascade)
+  responsavel   Utilizador?        @relation("DecisaoEmpresa", fields: [decididoPor], references: [id], onDelete: SetNull)
+  cotacoes      Cotacao[]
+
+  @@index([estado])
+  @@index([decididoPor])
+  @@map("empresa")
+}
+
+enum EstadoCotacao {
+  PEDIDA
+  RESPONDIDA
+  ACEITE
+  RECUSADA
+  EXPIRADA
+
+  @@map("estado_cotacao")
+}
+
+// Desconto por grupo de cliente B2B, usado como preço sugerido ao responder a cotações.
+// O desconto de uma categoria prevalece sobre o geral do grupo (categoria nula).
+model DescontoGrupo {
+  id            Int                @id @default(autoincrement())
+  grupo         TipoClienteEmpresa
+  categoriaId   Int?               @map("categoria_id")
+  percentagem   Decimal            @db.Decimal(5, 2)
+  activo        Boolean            @default(true)
+  criadoEm      DateTime           @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm DateTime           @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  categoria     Categoria?         @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+
+  @@unique([grupo, categoriaId])
+  @@index([categoriaId])
+  @@map("desconto_grupo")
+}
+
+// Pedido de cotação de uma empresa aprovada. PEDIDA → RESPONDIDA → ACEITE | RECUSADA | EXPIRADA.
+// Ao ser aceite gera uma encomenda (encomendaId) com os preços propostos.
+model Cotacao {
+  id            Int           @id @default(autoincrement())
+  codigo        String        @unique @db.VarChar(20)
+  empresaId     Int           @map("empresa_id")
+  utilizadorId  Int           @map("utilizador_id")
+  estado        EstadoCotacao @default(PEDIDA)
+  notasCliente  String?       @map("notas_cliente") @db.Text
+  notasLoja     String?       @map("notas_loja") @db.Text
+  validaAte     DateTime?     @map("valida_ate") @db.Timestamptz(6)
+  respondidaPor Int?          @map("respondida_por")
+  respondidaEm  DateTime?     @map("respondida_em") @db.Timestamptz(6)
+  decididaEm    DateTime?     @map("decidida_em") @db.Timestamptz(6)
+  encomendaId   Int?          @unique @map("encomenda_id")
+  criadoEm      DateTime      @default(now()) @map("criado_em") @db.Timestamptz(6)
+  actualizadoEm DateTime      @default(now()) @updatedAt @map("actualizado_em") @db.Timestamptz(6)
+  empresa       Empresa       @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  utilizador    Utilizador    @relation("CotacaoPedida", fields: [utilizadorId], references: [id], onDelete: Restrict)
+  responsavel   Utilizador?   @relation("CotacaoRespondida", fields: [respondidaPor], references: [id], onDelete: SetNull)
+  encomenda     Encomenda?    @relation(fields: [encomendaId], references: [id], onDelete: SetNull)
+  itens         ItemCotacao[]
+
+  @@index([empresaId, estado])
+  @@index([estado, criadoEm])
+  @@index([utilizadorId])
+  @@index([respondidaPor])
+  @@map("cotacao")
+}
+
+model ItemCotacao {
+  id            Int      @id @default(autoincrement())
+  cotacaoId     Int      @map("cotacao_id")
+  produtoId     String   @map("produto_id")
+  quantidade    Int
+  precoPedido   Decimal? @map("preco_pedido") @db.Decimal(12, 2)
+  precoProposto Decimal? @map("preco_proposto") @db.Decimal(12, 2)
+  cotacao       Cotacao  @relation(fields: [cotacaoId], references: [id], onDelete: Cascade)
+  produto       Produto  @relation(fields: [produtoId], references: [id], onDelete: Restrict)
+
+  @@unique([cotacaoId, produtoId])
+  @@index([produtoId])
+  @@map("item_cotacao")
+}
+
+// Contador de facturas por ano. Incrementado na mesma transacção que cria a factura:
+// se a transacção falhar, o número não é consumido (numeração sem saltos).
+model SerieFactura {
+  ano          Int @id
+  ultimoNumero Int @map("ultimo_numero")
+
+  @@map("serie_factura")
+}
+
+// Factura (cópia imutável dos dados no momento da emissão). Numeração "FT AAAA/NNNN".
+// ATENÇÃO: modelo por validar por um contabilista antes de uso real.
+model Factura {
+  id             Int       @id @default(autoincrement())
+  numero         String    @unique @db.VarChar(20)
+  ano            Int
+  sequencia      Int
+  encomendaId    Int       @unique @map("encomenda_id")
+  emitidaEm      DateTime  @default(now()) @map("emitida_em") @db.Timestamptz(6)
+  vendedorNome   String    @map("vendedor_nome") @db.VarChar(200)
+  vendedorNuit   String?   @map("vendedor_nuit") @db.VarChar(9)
+  vendedorMorada String?   @map("vendedor_morada") @db.VarChar(255)
+  clienteNome    String    @map("cliente_nome") @db.VarChar(200)
+  clienteNuit    String?   @map("cliente_nuit") @db.VarChar(9)
+  clienteMorada  String    @map("cliente_morada") @db.VarChar(500)
+  subtotal       Decimal   @db.Decimal(12, 2)
+  totalDesconto  Decimal   @map("total_desconto") @db.Decimal(12, 2)
+  valorFrete     Decimal   @map("valor_frete") @db.Decimal(12, 2)
+  baseTributavel Decimal   @map("base_tributavel") @db.Decimal(12, 2)
+  taxaIva        Decimal   @map("taxa_iva") @db.Decimal(5, 2)
+  valorIva       Decimal   @map("valor_iva") @db.Decimal(12, 2)
+  total          Decimal   @db.Decimal(12, 2)
+  codigoMoeda    String    @default("MZN") @map("codigo_moeda") @db.Char(3)
+  encomenda      Encomenda @relation(fields: [encomendaId], references: [id], onDelete: Restrict)
+
+  @@unique([ano, sequencia])
+  @@index([emitidaEm])
+  @@map("factura")
+}
