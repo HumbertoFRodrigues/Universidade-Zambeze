@@ -1,0 +1,39 @@
+{
+  "name": "@easyshop/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "check": "eslint src",
+    "db:generate": "prisma generate --schema ../db/schema.prisma",
+    "db:validate": "prisma validate --schema ../db/schema.prisma",
+    "db:reset": "prisma migrate reset --force --schema ../db/schema.prisma",
+    "db:migrate": "prisma migrate dev --schema ../db/schema.prisma",
+    "db:deploy": "prisma migrate deploy --schema ../db/schema.prisma",
+    "db:seed": "node ../db/seed.js",
+    "db:seed:preview": "node ../db/seed.js --dry-run",
+    "db:studio": "prisma studio --schema ../db/schema.prisma"
+  },
+  "prisma": {
+    "schema": "../db/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.0",
+    "bcrypt": "^6.0.0",
+    "cors": "2.8.5",
+    "dotenv": "17.2.3",
+    "express": "^5.1.0",
+    "helmet": "8.1.0",
+    "mailtrap": "^5.0.0",
+    "nodemailer": "^10.1.1",
+    "pdfkit": "0.20.2",
+    "prisma": "6.19.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "eslint": "9.39.1",
+    "globals": "16.5.0"
+  }
+}
