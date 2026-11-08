@@ -1,0 +1,71 @@
+@baseUrl = http://localhost:3000/api
+# ID do primeiro administrador criado pelo seed. Altere se estiver a usar outro utilizador administrador.
+@adminId = -10000
+@marcaTempo = {{$timestamp}}
+
+### Criar categoria de teste
+# @name criarCategoria
+POST {{baseUrl}}/admin/categorias
+x-admin-id: {{adminId}}
+Content-Type: application/json
+
+{
+  "nome": "Categoria HTTP {{marcaTempo}}"
+}
+
+### Criar produto com imagem e stock inicial
+# @name criarProduto
+POST {{baseUrl}}/admin/produtos
+x-admin-id: {{adminId}}
+Content-Type: application/json
+
+{
+  "slug": "produto-http-{{marcaTempo}}",
+  "codigo": "HTTP-{{marcaTempo}}",
+  "nome": "Produto de teste HTTP {{marcaTempo}}",
+  "marca": "Teste",
+  "descricao": "Produto de demonstração criado através do ficheiro HTTP.",
+  "especificacoes": {
+    "cor": "Preto",
+    "material": "Demonstração"
+  },
+  "garantia": "Garantia de teste",
+  "preco": "1500.00",
+  "codigoMoeda": "MZN",
+  "quantidadeStock": 10,
+  "limiarStockBaixo": 5,
+  "categoriaId": {{criarCategoria.response.body.categoria.id}},
+  "imagens": [
+    {
+      "url": "https://example.com/produto-http.jpg",
+      "textoAlternativo": "Imagem de demonstração",
+      "ordem": 0,
+      "principal": true
+    }
+  ]
+}
+
+### Actualizar o preço do produto criado acima
+PUT {{baseUrl}}/admin/produtos/{{criarProduto.response.body.produto.id}}/preco
+x-admin-id: {{adminId}}
+Content-Type: application/json
+
+{
+  "novoPreco": "1750.00",
+  "motivo": "Teste de actualização de preço via HTTP."
+}
+
+### Registar uma entrada de stock no produto criado acima
+PUT {{baseUrl}}/admin/produtos/{{criarProduto.response.body.produto.id}}/stock
+x-admin-id: {{adminId}}
+Content-Type: application/json
+
+{
+  "tipoMovimento": "ENTRADA",
+  "variacao": 5,
+  "motivo": "Reposição de teste via HTTP."
+}
+
+### Consultar produtos com stock baixo
+GET {{baseUrl}}/admin/produtos/stock-baixo
+x-admin-id: {{adminId}}

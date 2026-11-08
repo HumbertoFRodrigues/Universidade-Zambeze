@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3000/api
+@slug = seed-luvas-de-protecao-1
+
+### Listar produtos activos
+GET {{baseUrl}}/produtos
+
+### Pesquisar e filtrar produtos
+GET {{baseUrl}}/produtos?pesquisa=luva&categoria=Luvas%20de%20proteção&marca=3M&precoMin=100&precoMax=10000&ordenar=preco-asc&pagina=1&limite=12
+
+### Obter detalhes de um produto pelo slug
+GET {{baseUrl}}/produtos/{{slug}}
+
+### Alias em inglês para listar produtos
+GET {{baseUrl}}/products
+
+### Alias em inglês para obter detalhes de um produto
+GET {{baseUrl}}/products/{{slug}}

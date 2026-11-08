@@ -1,0 +1,33 @@
+{
+  "name": "easyshop",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w frontend",
+    "check": "npm run check -w backend && npm run check -w frontend && npm run check:seed && npm run db:validate",
+    "check:seed": "eslint --config backend/eslint.config.js db/seed.js db/seed backend/tests/unit/seed.test.js",
+    "db:generate": "npm run db:generate -w backend",
+    "db:validate": "npm run db:validate -w backend",
+    "db:migrate": "npm run db:migrate -w backend --",
+    "db:deploy": "npm run db:deploy -w backend",
+    "db:seed": "npm run db:seed -w backend",
+    "db:seed:preview": "npm run db:seed:preview -w backend",
+    "db:reset:seed": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/reset-and-seed.ps1 -ConfirmReset",
+    "test:seed": "node --test backend/tests/unit/seed.test.js",
+    "test:unit": "node --test backend/tests/unit/validadores.test.js backend/tests/unit/empresa.test.js backend/tests/unit/precos-cotacoes.test.js backend/tests/unit/facturas-sku.test.js",
+    "test:integration": "node --test --test-concurrency=1 backend/tests/integration/fase2.test.js backend/tests/integration/empresas.test.js backend/tests/integration/cotacoes.test.js backend/tests/integration/facturas.test.js",
+    "db:studio": "npm run db:studio -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "9.2.1",
+    "embedded-postgres": "^18.4.0-beta.17"
+  }
+}

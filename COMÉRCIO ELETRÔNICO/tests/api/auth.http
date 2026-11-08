@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:3000/api
+@email = teste.auth@example.com
+@palavraPasse = Teste123!
+
+### Registar uma conta de teste
+POST {{baseUrl}}/auth/registar
+Content-Type: application/json
+
+{
+  "nome": "Utilizador de Teste",
+  "email": "{{email}}",
+  "telefone": "841234567",
+  "palavraPasse": "{{palavraPasse}}",
+  "aceitePrivacidade": true
+}
+
+### Iniciar sessão com a conta registada acima
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "palavraPasse": "{{palavraPasse}}"
+}

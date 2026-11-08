@@ -1,0 +1,67 @@
+@baseUrl = http://localhost:3000/api
+@tokenSessao = easyshop-seed-sessao-62
+@zonaEntregaId = 1
+@modalidadeEntregaId = 1
+@adminId = 1
+@idempotencyKey = {{$guid}}
+@emailContacto = teste.checkout@example.com
+
+### Consultar zonas e modalidades com tarifa activa
+GET {{baseUrl}}/entregas/opcoes
+
+### Simular frete, promoções e total do carrinho de convidado
+# @name cotarFrete
+POST {{baseUrl}}/checkout/calcular-frete
+Content-Type: application/json
+
+{
+  "tokenSessao": "{{tokenSessao}}",
+  "zonaEntregaId": {{zonaEntregaId}},
+  "modalidadeEntregaId": {{modalidadeEntregaId}}
+}
+
+### Confirmar compra (cria encomenda, reserva stock e esvazia o carrinho)
+# @name confirmarCompra
+POST {{baseUrl}}/checkout/confirmar
+x-idempotency-key: {{idempotencyKey}}
+Content-Type: application/json
+
+{
+  "tokenSessao": "{{tokenSessao}}",
+  "zonaEntregaId": {{zonaEntregaId}},
+  "modalidadeEntregaId": {{modalidadeEntregaId}},
+  "nomeContacto": "Cliente de Teste",
+  "emailContacto": "{{emailContacto}}",
+  "telefoneContacto": "+258840000001",
+  "entregaNomeDestinatario": "Cliente de Teste",
+  "entregaTelefone": "+258840000001",
+  "entregaLinhaEndereco": "Rua de Teste, Nº 1",
+  "entregaCidade": "Maputo",
+  "entregaProvincia": "Maputo Cidade",
+  "entregaPontoReferencia": "Morada fictícia para teste",
+  "aceiteTermos": true
+}
+
+### Consultar estado da encomenda pelo código e e-mail de contacto
+GET {{baseUrl}}/encomendas/{{confirmarCompra.response.body.encomenda.codigoEncomenda}}/entrega?email={{emailContacto}}
+
+### Registar saída para transporte (requer administrador)
+PATCH {{baseUrl}}/admin/encomendas/{{confirmarCompra.response.body.encomenda.id}}/entrega
+x-admin-id: {{adminId}}
+Content-Type: application/json
+
+{
+  "estado": "EM_TRANSPORTE",
+  "observacao": "Encomenda entregue ao transportador."
+}
+
+### Confirmar entrega (requer administrador)
+PATCH {{baseUrl}}/admin/encomendas/{{confirmarCompra.response.body.encomenda.id}}/entrega
+x-admin-id: {{adminId}}
+Content-Type: application/json
+
+{
+  "estado": "ENTREGUE",
+  "recebidoPor": "Cliente de Teste",
+  "observacao": "Recepção confirmada."
+}
